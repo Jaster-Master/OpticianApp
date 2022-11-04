@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class Settings extends StatelessWidget{
-  const Settings({super.key});
+class SettingsView extends StatelessWidget{
+  const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {

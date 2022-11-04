@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class EyeglassPrescription extends StatelessWidget{
-  const EyeglassPrescription({super.key});
+class EyeglassPrescriptionView extends StatelessWidget{
+  const EyeglassPrescriptionView({super.key});
 
   @override
   Widget build(BuildContext context) {

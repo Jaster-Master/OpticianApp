@@ -64,7 +64,10 @@ class LoginViewState extends State<LoginView> {
                   child: SizedBox(
                     height: 75,
                     width: 300,
-                    child: TextButton(
+                    child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(Sth.defaultRounded))),
+                      ),
                       child: const Text("Login",
                           style: TextStyle(fontSize: Sth.fontSize1)),
                       onPressed: () => {

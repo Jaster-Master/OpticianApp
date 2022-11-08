@@ -10,8 +10,7 @@ class AppointmentView extends StatefulWidget {
 class AppointmentViewState extends State<AppointmentView> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Text("among");
   }
 }
 

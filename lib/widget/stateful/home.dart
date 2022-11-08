@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:opticianapp/widget/stateful/appointment.dart';
 import 'package:opticianapp/widget/stateful/partnerlist.dart';
 import 'package:opticianapp/widget/stateless/eyeglassPrescription.dart';
+import 'package:opticianapp/widget/stateless/order.dart';
 import 'package:opticianapp/widget/stateless/settings.dart';
 
 class HomeView extends StatefulWidget {
@@ -12,17 +14,36 @@ class HomeView extends StatefulWidget {
 }
 
 class HomeViewState extends State<HomeView> {
+  PageController controller = PageController(
+    initialPage: 0,
+  );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              child: Text("ToDo")
-          ),
+        body: PageView(
+          controller: controller,
+          onPageChanged: (page) {
+            setState(() {
+              pageChanged(page);
+            });
+          },
+          children: const [
+            AppointmentView(),
+            OrderView(),
+          ],
         ),
       ),
     );
+  }
+
+  void pageChanged(int page) {
+
   }
 }

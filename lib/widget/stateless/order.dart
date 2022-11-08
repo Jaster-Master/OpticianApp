@@ -5,8 +5,7 @@ class OrderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Text("among2");
   }
 }
 
@@ -15,8 +14,7 @@ class OrderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Text("among2");
   }
 }
 

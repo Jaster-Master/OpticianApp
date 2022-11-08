@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:opticianapp/sth.dart';
+import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/widget/stateful/home.dart';
 import 'package:opticianapp/widget/stateful/partnerlist.dart';
-import 'package:opticianapp/widget/stateless/eyeglassPrescription.dart';
+import 'package:opticianapp/widget/stateless/eyeglass_prescription.dart';
 import 'package:opticianapp/widget/stateless/settings.dart';
 
 class PageSlider extends StatefulWidget {
-  const PageSlider({super.key});
+  bool isAppointmentView;
+
+  PageSlider(this.isAppointmentView, {super.key});
 
   @override
   State<StatefulWidget> createState() => PageSliderState();
@@ -25,6 +27,10 @@ class PageSliderState extends State<PageSlider> {
     super.dispose();
   }
 
+  void updateView(bool isAppointmentView) {
+    widget.isAppointmentView = isAppointmentView;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,15 +38,14 @@ class PageSliderState extends State<PageSlider> {
         children: [
           Expanded(
             child: PageView(
-              //physics: NeverScrollableScrollPhysics(),
               controller: controller,
               onPageChanged: (page) {
                 setState(() {
                   pageChanged(page);
                 });
               },
-              children: const [
-                HomeView(),
+              children: [
+                HomeView(updateView, widget.isAppointmentView),
                 EyeglassPrescriptionView(),
                 PartnerListView(),
                 SettingsView(),
@@ -48,19 +53,23 @@ class PageSliderState extends State<PageSlider> {
             ),
           ),
           Center(
-              child: Padding(
-            padding: EdgeInsets.only(bottom: Sth.morePadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                PageIcon(controller, 0, Icons.home, activePages[0]),
-                PageIcon(controller, 1, Icons.description, activePages[1]),
-                PageIcon(controller, 2, Icons.person, activePages[2]),
-                PageIcon(controller, 3, Icons.comment, activePages[3]),
-              ],
+            child: Padding(
+              padding: EdgeInsets.only(bottom: DefaultProperties.morePadding),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  PageIcon(controller, 0, Icons.home_outlined, activePages[0]),
+                  PageIcon(controller, 1, Icons.description_outlined,
+                      activePages[1]),
+                  PageIcon(
+                      controller, 2, Icons.person_outlined, activePages[2]),
+                  PageIcon(
+                      controller, 3, Icons.comment_outlined, activePages[3]),
+                ],
+              ),
             ),
-          ),),
+          ),
         ],
       ),
     );

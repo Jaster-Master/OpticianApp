@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:opticianapp/notification/notificationHandler.dart';
+import 'package:opticianapp/notification/notification_handler.dart';
 
 class NotificationService {
   NotificationHandler notificationHandler;

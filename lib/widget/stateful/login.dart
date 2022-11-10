@@ -56,7 +56,7 @@ class LoginViewState extends State<LoginView> {
                 child: Padding(
                   padding:
                       const EdgeInsets.all(DefaultProperties.defaultPadding),
-                  child: Text(errorText ?? ""),
+                  child: Text(errorText ?? "", style: TextStyle(fontSize: DefaultProperties.fontSize1)),
                 ),
               ),
               Padding(

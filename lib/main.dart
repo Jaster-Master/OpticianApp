@@ -14,6 +14,7 @@ class OpticianApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: "Poppins",
         primarySwatch: MaterialColor(0xFF4525f2, const {
           50: const Color(0xFF4525f2),
           100: const Color(0xFF4525f2),

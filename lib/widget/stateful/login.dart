@@ -15,6 +15,61 @@ class LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    var loginLogo = Padding(
+      padding: EdgeInsets.all(DefaultProperties.morePadding),
+      child: Image(image: AssetImage("assets/asabit-logo.png")),
+    );
+    var usernameField = Padding(
+      padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+      child: TextField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius:
+                BorderRadius.circular(DefaultProperties.defaultRounded),
+          ),
+          labelText: 'Enter your username',
+        ),
+      ),
+    );
+    var passwordField = Padding(
+      padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+      child: TextField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius:
+                BorderRadius.circular(DefaultProperties.defaultRounded),
+          ),
+          labelText: 'Enter your password',
+        ),
+        obscureText: true,
+      ),
+    );
+    var errorTextWidget = Visibility(
+      visible: errorText != null,
+      child: Padding(
+        padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+        child: Text(errorText ?? "",
+            style: TextStyle(fontSize: DefaultProperties.fontSize1)),
+      ),
+    );
+    var loginButton = Padding(
+      padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+      child: SizedBox(
+        height: 75,
+        width: 300,
+        child: OutlinedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(DefaultProperties.defaultRounded))),
+          ),
+          child: Text("Login",
+              style: TextStyle(fontSize: DefaultProperties.fontSize1)),
+          onPressed: () => {onLogin()},
+        ),
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
@@ -22,61 +77,11 @@ class LoginViewState extends State<LoginView> {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.all(DefaultProperties.morePadding),
-                child: Image(image: AssetImage("assets/asabit-logo.png")),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          DefaultProperties.defaultRounded),
-                    ),
-                    labelText: 'Enter your username',
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                          DefaultProperties.defaultRounded),
-                    ),
-                    labelText: 'Enter your password',
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              Visibility(
-                visible: true,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.all(DefaultProperties.defaultPadding),
-                  child: Text(errorText ?? "", style: TextStyle(fontSize: DefaultProperties.fontSize1)),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
-                child: SizedBox(
-                  height: 75,
-                  width: 300,
-                  child: OutlinedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              DefaultProperties.defaultRounded))),
-                    ),
-                    child: const Text("Login",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize1)),
-                    onPressed: () => {onLogin()},
-                  ),
-                ),
-              ),
+              loginLogo,
+              usernameField,
+              passwordField,
+              errorTextWidget,
+              loginButton,
             ],
           ),
         ),

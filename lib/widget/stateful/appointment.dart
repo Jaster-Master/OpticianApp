@@ -16,56 +16,75 @@ class AppointmentView extends StatefulWidget {
 class AppointmentViewState extends State<AppointmentView> {
   @override
   Widget build(BuildContext context) {
+    var tabText = Text("Meine Termine",
+        style: TextStyle(fontSize: DefaultProperties.fontSize1));
+    var headerText = Text("Anzahl Termine",
+        style: TextStyle(fontSize: DefaultProperties.fontSize1));
+    var tabs = Row(
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.calendar_today_outlined),
+              onPressed: () {},
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: DefaultProperties.blueColor,
+                    width: 5,
+                  ),
+                ),
+              ),
+              child: tabText,
+            ),
+          ],
+        ),
+        Spacer(),
+        IconButton(
+            onPressed: () => onPress(),
+            icon: Icon(Icons.local_shipping_outlined)),
+      ],
+    );
+    var addButton = Row(
+      children: [
+        CircleAvatar(
+          backgroundColor: DefaultProperties.blueColor,
+          child: IconButton(
+            onPressed: () => {},
+            icon: Icon(Icons.add),
+            color: Colors.white,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: headerText,
+        ),
+      ],
+    );
+    var pageDots = Padding(
+      padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: DefaultProperties.defaultPadding),
+            child: Icon(Icons.circle,
+                size: 10, color: DefaultProperties.blueColor),
+          ),
+          Icon(Icons.circle_outlined,
+              size: 10, color: DefaultProperties.blueColor)
+        ],
+      ),
+    );
+
     return Padding(
       padding: EdgeInsets.all(DefaultProperties.morePadding),
       child: Column(
         children: [
-          Row(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.calendar_today_outlined),
-                    onPressed: () {},
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: DefaultProperties.blueColor,
-                          width: 5,
-                        ),
-                      ),
-                    ),
-                    child: const Text("Meine Termine",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize1)),
-                  ),
-                ],
-              ),
-              Spacer(),
-              IconButton(
-                  onPressed: () => onPress(),
-                  icon: Icon(Icons.local_shipping_outlined)),
-            ],
-          ),
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: DefaultProperties.blueColor,
-                child: IconButton(
-                  onPressed: () => {},
-                  icon: Icon(Icons.add),
-                  color: Colors.white,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Text("Anzahl Termine",
-                    style: TextStyle(fontSize: DefaultProperties.fontSize1)),
-              ),
-            ],
-          ),
+          tabs,
+          addButton,
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.all(0),
@@ -76,22 +95,7 @@ class AppointmentViewState extends State<AppointmentView> {
               },
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.only(right: DefaultProperties.defaultPadding),
-                  child: Icon(Icons.circle,
-                      size: 10, color: DefaultProperties.blueColor),
-                ),
-                Icon(Icons.circle_outlined,
-                    size: 10, color: DefaultProperties.blueColor)
-              ],
-            ),
-          ),
+          pageDots,
         ],
       ),
     );
@@ -109,8 +113,40 @@ class AppointmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int days = 0;
+    int days = item.due.difference(DateTime.now()).inDays;
+    if (days < 0) days = 0;
     double height = 140;
+
+    var timeline = Container(
+      padding: EdgeInsets.only(left: 40),
+      decoration: BoxDecoration(
+        border: Border(left: BorderSide(color: DefaultProperties.blueColor)),
+      ),
+      child: SizedBox(height: height),
+    );
+    var timelineDot = Padding(
+      padding:
+          EdgeInsets.only(right: 40, bottom: DefaultProperties.morePadding),
+      child: Icon(
+        Icons.circle,
+        color: DefaultProperties.blueColor,
+      ),
+    );
+    var descriptionText = Text(item.text,
+        style: TextStyle(fontSize: DefaultProperties.fontSize1));
+    var dateText = Row(
+      children: [
+        Text(DateFormat("dd.MM.yyyy").format(item.due),
+            style: TextStyle(fontSize: DefaultProperties.fontSize1)),
+      ],
+    );
+    var leftDaysText = Row(
+      children: [
+        Text("noch $days Tage",
+            style: TextStyle(fontSize: DefaultProperties.fontSize1)),
+      ],
+    );
+
     return Padding(
       padding: EdgeInsets.only(left: 8),
       child: Row(
@@ -118,24 +154,7 @@ class AppointmentItem extends StatelessWidget {
         children: [
           Stack(
             alignment: Alignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 40),
-                decoration: BoxDecoration(
-                  border: Border(
-                      left: BorderSide(color: DefaultProperties.blueColor)),
-                ),
-                child: SizedBox(height: height),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    right: 40, bottom: DefaultProperties.morePadding),
-                child: Icon(
-                  Icons.circle,
-                  color: DefaultProperties.blueColor,
-                ),
-              ),
-            ],
+            children: [timeline, timelineDot],
           ),
           Spacer(),
           SizedBox(
@@ -152,29 +171,15 @@ class AppointmentItem extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(item.text,
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize1)),
+                        descriptionText,
                         IconButton(
                             padding: EdgeInsets.all(0),
                             icon: Icon(Icons.menu),
                             onPressed: () => {})
                       ],
                     ),
-                    Row(
-                      children: [
-                        Text(DateFormat("dd.MM.yyyy").format(item.due),
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize1)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("noch $days Tage",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize1)),
-                      ],
-                    ),
+                    dateText,
+                    leftDaysText,
                   ],
                 ),
               ),

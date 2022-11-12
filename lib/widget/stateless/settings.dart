@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:opticianapp/default_properties.dart';
 
 class SettingsView extends StatelessWidget{
   const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Padding(
+      padding: EdgeInsets.all(DefaultProperties.morePadding),
+      child: Text("Settings"),
+    );
   }
 
 }

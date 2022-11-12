@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:opticianapp/default_properties.dart';
 
 class PartnerListView extends StatefulWidget{
   const PartnerListView({super.key});
@@ -11,8 +12,10 @@ class PartnerListView extends StatefulWidget{
 class PartnerListViewState extends State<PartnerListView> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Padding(
+      padding: EdgeInsets.all(DefaultProperties.morePadding),
+      child: Text("PartnerList"),
+    );
   }
 }
 

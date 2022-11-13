@@ -8,7 +8,14 @@ class EyeglassPrescriptionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(DefaultProperties.morePadding),
-      child: Text("EyeglassPrescription"),
+      child: Column(
+        children: [
+          Text("Brillenpass"),
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+          ),
+        ],
+      )
     );
   }
 }

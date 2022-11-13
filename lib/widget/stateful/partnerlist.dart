@@ -14,7 +14,7 @@ class PartnerListViewState extends State<PartnerListView> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(DefaultProperties.morePadding),
-      child: Text("PartnerList"),
+      child: Text("PartnerListe"),
     );
   }
 }

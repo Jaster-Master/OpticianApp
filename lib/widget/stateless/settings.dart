@@ -8,7 +8,7 @@ class SettingsView extends StatelessWidget{
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(DefaultProperties.morePadding),
-      child: Text("Settings"),
+      child: Text("Einstellungen"),
     );
   }
 

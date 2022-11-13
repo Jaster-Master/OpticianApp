@@ -37,19 +37,25 @@ class PageSliderState extends State<PageSlider> {
       body: Column(
         children: [
           Expanded(
-            child: PageView(
-              controller: controller,
-              onPageChanged: (page) {
-                setState(() {
-                  pageChanged(page);
-                });
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
               },
-              children: [
-                HomeView(updateView, widget.isAppointmentView),
-                EyeglassPrescriptionView(),
-                PartnerListView(),
-                SettingsView(),
-              ],
+              child: PageView(
+                controller: controller,
+                onPageChanged: (page) {
+                  setState(() {
+                    pageChanged(page);
+                  });
+                },
+                children: [
+                  HomeView(updateView, widget.isAppointmentView),
+                  EyeglassPrescriptionView(),
+                  PartnerListView(),
+                  SettingsView(),
+                ],
+              ),
             ),
           ),
           Center(

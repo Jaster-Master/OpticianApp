@@ -16,8 +16,10 @@ class OrderView extends StatelessWidget {
     var tabs = Row(
       children: [
         IconButton(
+            color: DefaultProperties.grayColor,
             onPressed: () => onPress(),
-            icon: Icon(Icons.calendar_today_outlined)),
+            icon: Icon(Icons.calendar_today_outlined,
+                size: DefaultProperties.buttonSize)),
         Spacer(),
         Row(
           children: [
@@ -33,7 +35,8 @@ class OrderView extends StatelessWidget {
               child: tabText,
             ),
             IconButton(
-              icon: Icon(Icons.local_shipping_outlined),
+              icon: Icon(Icons.local_shipping_outlined,
+                  size: DefaultProperties.buttonSize),
               onPressed: () {},
             ),
           ],
@@ -56,25 +59,58 @@ class OrderView extends StatelessWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.all(DefaultProperties.morePadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          tabs,
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return OrderItem(Order(0, 0, "", "Sport Brille 25x Ultra",
-                      DateTime.now(), false, DateTime.now()));
-                },
+      padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+      child: Padding(
+        padding: EdgeInsets.all(DefaultProperties.morePadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            tabs,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white, Colors.white.withOpacity(0.05)],
+                      stops: [0.75, 1],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds);
+                  },
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overscroll) {
+                      overscroll.disallowIndicator();
+                      return true;
+                    },
+                    child: ListView.builder(
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        // extra padding for last item with hardcoded index TODO
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              bottom: index == 9
+                                  ? DefaultProperties.moreMorePadding
+                                  : 0),
+                          child: OrderItem(Order(
+                              0,
+                              0,
+                              "",
+                              "Sport Brille 25x Ultra",
+                              DateTime.now(),
+                              false,
+                              DateTime.now())),
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-          pageDots,
-        ],
+            pageDots,
+          ],
+        ),
       ),
     );
   }
@@ -91,51 +127,60 @@ class OrderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int days = 0;
+    int days = item.due.difference(DateTime.now()).inDays;
+    if (days < 0) days = 0;
     Color color = item.finished ? Colors.green : Colors.red;
-    var descriptionText = Text(item.text,
-        style: TextStyle(fontSize: DefaultProperties.fontSize1));
-    var dateText = Row(
-      children: [
-        Text(DateFormat("dd.MM.yyyy").format(item.due),
-            style: TextStyle(fontSize: DefaultProperties.fontSize1)),
-      ],
-    );
-    var leftDaysText = Row(
-      children: [
-        Text("noch $days Tage",
-            style: TextStyle(fontSize: DefaultProperties.fontSize1)),
-      ],
-    );
 
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: DefaultProperties.morePadding),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: DefaultProperties.blueColor),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.circle, color: color),
-                      descriptionText,
-                      IconButton(
-                          icon: Icon(Icons.menu),
-                          padding: EdgeInsets.all(0),
-                          onPressed: () => {})
-                    ],
+    var descriptionText = Text(item.text,
+        style: TextStyle(fontSize: DefaultProperties.fontSize2));
+    var dateText = Padding(
+      padding: EdgeInsets.only(bottom: DefaultProperties.defaultPadding),
+      child: Text(DefaultProperties.defaultDateFormat.format(item.due),
+          style: TextStyle(fontSize: DefaultProperties.fontSize1)),
+    );
+    var leftDaysText = Text("noch $days Tage",
+        style: TextStyle(
+            fontSize: DefaultProperties.fontSize3,
+            color: DefaultProperties.grayColor));
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: DefaultProperties.morePadding),
+      child: Container(
+        margin: EdgeInsets.all(DefaultProperties.defaultPadding),
+        padding: EdgeInsets.all(DefaultProperties.defaultPadding),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(DefaultProperties.defaultRounded),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.25),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 10.0)),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.only(right: DefaultProperties.lessPadding),
+                  child: Icon(
+                    Icons.circle,
+                    color: color,
+                    size: DefaultProperties.iconSize,
                   ),
-                  dateText,
-                  leftDaysText,
-                ],
-              ),
+                ),
+                descriptionText,
+              ],
             ),
-          ),
-        ],
-      );
+            dateText,
+            leftDaysText,
+          ],
+        ),
+      ),
+    );
   }
 }

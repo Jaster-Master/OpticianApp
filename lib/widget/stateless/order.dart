@@ -16,6 +16,7 @@ class OrderView extends StatelessWidget {
     var tabs = Row(
       children: [
         IconButton(
+          tooltip: "Termine",
             color: DefaultProperties.grayColor,
             onPressed: () => onPress(),
             icon: Icon(Icons.calendar_today_outlined,
@@ -35,6 +36,7 @@ class OrderView extends StatelessWidget {
               child: tabText,
             ),
             IconButton(
+              tooltip: "Aufträge",
               icon: Icon(Icons.local_shipping_outlined,
                   size: DefaultProperties.buttonSize),
               onPressed: () {},

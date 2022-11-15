@@ -32,6 +32,7 @@ class AppointmentViewState extends State<AppointmentView> {
           Row(
             children: [
               IconButton(
+                tooltip: "Termine",
                 icon: Icon(
                   Icons.calendar_today_outlined,
                   size: DefaultProperties.buttonSize,
@@ -53,6 +54,7 @@ class AppointmentViewState extends State<AppointmentView> {
           ),
           Spacer(),
           IconButton(
+            tooltip: "Aufträge",
               color: DefaultProperties.grayColor,
               onPressed: () => onPress(),
               icon: Icon(
@@ -68,6 +70,7 @@ class AppointmentViewState extends State<AppointmentView> {
           backgroundColor: DefaultProperties.blueColor,
           radius: DefaultProperties.buttonSize / 1.2,
           child: IconButton(
+            tooltip: "Erinnerung hinzufügen",
             padding: EdgeInsets.zero,
             onPressed: () => {onAddAppointment()},
             icon: Icon(

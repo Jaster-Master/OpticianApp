@@ -65,13 +65,14 @@ class PageSliderState extends State<PageSlider> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  PageIcon(controller, 0, Icons.home_outlined, activePages[0]),
+                  PageIcon(controller, 0, Icons.home_outlined, activePages[0],
+                      "Home"),
                   PageIcon(controller, 1, Icons.description_outlined,
-                      activePages[1]),
-                  PageIcon(
-                      controller, 2, Icons.person_outlined, activePages[2]),
-                  PageIcon(
-                      controller, 3, Icons.comment_outlined, activePages[3]),
+                      activePages[1], "Brillenpass"),
+                  PageIcon(controller, 2, Icons.person_outlined, activePages[2],
+                      "Partnerliste"),
+                  PageIcon(controller, 3, Icons.comment_outlined,
+                      activePages[3], "Einstellungen"),
                 ],
               ),
             ),
@@ -93,8 +94,9 @@ class PageIcon extends StatefulWidget {
   int index;
   IconData icon;
   bool isActive;
+  String tooltip;
 
-  PageIcon(this.controller, this.index, this.icon, this.isActive, {super.key});
+  PageIcon(this.controller, this.index, this.icon, this.isActive, this.tooltip);
 
   @override
   State<StatefulWidget> createState() => PageIconState();
@@ -115,6 +117,7 @@ class PageIconState extends State<PageIcon> {
           ),
         ),
         child: IconButton(
+          tooltip: widget.tooltip,
           padding: EdgeInsets.zero,
           icon: Icon(widget.icon, size: 40),
           onPressed: () {

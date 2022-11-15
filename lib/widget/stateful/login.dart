@@ -27,7 +27,7 @@ class LoginViewState extends State<LoginView> {
             borderRadius:
                 BorderRadius.circular(DefaultProperties.defaultRounded),
           ),
-          labelText: 'Enter your username',
+          labelText: 'Benutzernamen eingeben',
         ),
       ),
     );
@@ -39,7 +39,7 @@ class LoginViewState extends State<LoginView> {
             borderRadius:
                 BorderRadius.circular(DefaultProperties.defaultRounded),
           ),
-          labelText: 'Enter your password',
+          labelText: 'Passwort eingeben',
         ),
         obscureText: true,
       ),

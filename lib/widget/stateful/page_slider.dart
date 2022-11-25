@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/model/eyeglass_prescription.dart';
@@ -35,7 +36,6 @@ class PageSliderState extends State<PageSlider> {
 
   @override
   Widget build(BuildContext context) {
-    JsonReader.getJson();
     return Scaffold(
       body: Column(
         children: [
@@ -53,8 +53,9 @@ class PageSliderState extends State<PageSlider> {
                   });
                 },
                 children: [
-                  HomeView(updateView, widget.isAppointmentView),
-                  EyeglassPrescriptionView(),
+                  HomeView(JsonReader.orders, JsonReader.appointments, updateView, widget.isAppointmentView),
+                  EyeglassPrescriptionView(
+                      JsonReader.eyeglassPrescriptions),
                   PartnerListView(),
                   SettingsView(),
                 ],

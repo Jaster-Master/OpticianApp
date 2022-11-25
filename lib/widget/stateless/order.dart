@@ -5,9 +5,10 @@ import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/model/order.dart';
 
 class OrderView extends StatelessWidget {
+  List<Order> orders;
   ValueChanged<bool> updateView;
 
-  OrderView(this.updateView);
+  OrderView(this.orders, this.updateView);
 
   @override
   Widget build(BuildContext context) {
@@ -87,22 +88,14 @@ class OrderView extends StatelessWidget {
                       return true;
                     },
                     child: ListView.builder(
-                      itemCount: 10,
+                      itemCount: orders.length,
                       itemBuilder: (context, index) {
-                        // extra padding for last item with hardcoded index TODO
                         return Padding(
                           padding: EdgeInsets.only(
-                              bottom: index == 9
+                              bottom: index == orders.length-1
                                   ? DefaultProperties.moreMorePadding
                                   : 0),
-                          child: OrderItem(Order(
-                              0,
-                              0,
-                              "",
-                              "Sport Brille 25x Ultra asdhföklasjdklföjaöslkdjföokasdjf",
-                              DateTime.now(),
-                              false,
-                              DateTime.now())),
+                          child: OrderItem(orders[index]),
                         );
                       },
                     ),

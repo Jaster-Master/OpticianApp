@@ -56,7 +56,6 @@
     "axisRight": 0,
     "addLeft": 0,
     "addRight": 0,
-    "auftnr": 151364,
     "prism1Left": 0,
     "prism1Right": 0,
     "basis1Left": 0,
@@ -94,6 +93,42 @@
     "customerID": "0000001",
     "type": "AL",
     "text": "eine Linse",
+    "due": "2022-10-01",
+    "finished": "true",
+    "timestamp": "2022-10-25 11:18:02"
+  },
+  {
+    "ID": 9,
+    "customerID": "0000001",
+    "type": "TH",
+    "text": "Kontrolle",
+    "due": "2022-11-01",
+    "finished": "false",
+    "timestamp": "2022-10-25 11:18:02"
+  },
+  {
+    "ID": 10,
+    "customerID": "0000001",
+    "type": "TB",
+    "text": "Sehschärfenkontrolle",
+    "due": "2022-10-01",
+    "finished": "true",
+    "timestamp": "2022-10-25 11:18:02"
+  },
+  {
+    "ID": 10,
+    "customerID": "0000001",
+    "type": "TL",
+    "text": "Kontrolle",
+    "due": "2022-10-01",
+    "finished": "true",
+    "timestamp": "2022-10-25 11:18:02"
+  },
+  {
+    "ID": 10,
+    "customerID": "0000001",
+    "type": "TE",
+    "text": "Erinnerung",
     "due": "2022-10-01",
     "finished": "true",
     "timestamp": "2022-10-25 11:18:02"

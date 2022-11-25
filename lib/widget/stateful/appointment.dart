@@ -8,9 +8,10 @@ import 'package:opticianapp/model/appointment.dart';
 import 'package:opticianapp/widget/stateful/appointment.dart';
 
 class AppointmentView extends StatefulWidget {
+  List<Appointment> appointments;
   ValueChanged<bool> updateView;
 
-  AppointmentView(this.updateView);
+  AppointmentView(this.appointments, this.updateView, {super.key});
 
   @override
   State<StatefulWidget> createState() => AppointmentViewState();
@@ -21,7 +22,7 @@ class AppointmentViewState extends State<AppointmentView> {
   Widget build(BuildContext context) {
     var tabText = Text("Meine Termine",
         style: TextStyle(fontSize: DefaultProperties.fontSize1));
-    var headerText = Text("10 Termine",
+    var headerText = Text("${widget.appointments.length} Termine",
         style: TextStyle(
             fontSize: DefaultProperties.fontSize1,
             color: DefaultProperties.grayColor));
@@ -129,21 +130,14 @@ class AppointmentViewState extends State<AppointmentView> {
                   },
                   child: ListView.builder(
                     padding: EdgeInsets.all(0),
-                    itemCount: 10,
+                    itemCount: widget.appointments.length,
                     itemBuilder: (context, index) {
-                      // extra padding for last item with hardcoded index TODO
                       return Padding(
                         padding: EdgeInsets.only(
-                            bottom: index == 9
+                            bottom: index == widget.appointments.length-1
                                 ? DefaultProperties.moreMorePadding
                                 : 0),
-                        child: AppointmentItem(Appointment(
-                            0,
-                            0,
-                            "TE",
-                            "Sehschärfenkontrolleadsfsadfasdfsadf",
-                            DateTime.now(),
-                            DateTime.now())),
+                        child: AppointmentItem(widget.appointments[index]),
                       );
                     },
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/widget/stateful/page_slider.dart';
 
@@ -90,9 +91,14 @@ class LoginViewState extends State<LoginView> {
   }
 
   void onLogin() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => PageSlider(true)),
-    );
+    JsonReader.initData().then((value) => {
+          if (value)
+            {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => PageSlider(true)),
+              )
+            }
+        });
   }
 }

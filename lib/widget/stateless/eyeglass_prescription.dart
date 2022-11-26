@@ -20,73 +20,85 @@ class EyeglassPrescriptionViewState extends State<EyeglassPrescriptionView> {
   Widget build(BuildContext context) {
     var tabText = Text("Brillenpass",
         style: TextStyle(fontSize: DefaultProperties.fontSize1));
+    var tab = Row(
+      children: [
+        Row(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: DefaultProperties.blueColor,
+                    width: 5,
+                  ),
+                ),
+              ),
+              child: tabText,
+            ),
+            IconButton(
+              icon: Icon(Icons.local_shipping_outlined, size: 0),
+              onPressed: null,
+            ),
+          ],
+        ),
+      ],
+    );
 
     return index == -1
         ? Padding(
-            padding: EdgeInsets.all(DefaultProperties.morePadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(
-                          bottom: DefaultProperties.morePadding),
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: DefaultProperties.blueColor,
-                            width: 5,
-                          ),
-                        ),
-                      ),
-                      child: tabText,
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white,
-                            Colors.white.withOpacity(0.05)
-                          ],
-                          stops: [0.75, 1],
-                          tileMode: TileMode.mirror,
-                        ).createShader(bounds);
-                      },
-                      child:
-                          NotificationListener<OverscrollIndicatorNotification>(
-                        onNotification: (overscroll) {
-                          overscroll.disallowIndicator();
-                          return true;
+            padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+            child: Padding(
+              padding: EdgeInsets.all(DefaultProperties.morePadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  tab,
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.white,
+                              Colors.white.withOpacity(0.05)
+                            ],
+                            stops: [0.75, 1],
+                            tileMode: TileMode.mirror,
+                          ).createShader(bounds);
                         },
-                        child: ListView.builder(
-                          itemCount: widget.eyeglassPrescriptions.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: index ==
-                                          widget.eyeglassPrescriptions.length -
-                                              1
-                                      ? DefaultProperties.moreMorePadding
-                                      : 0),
-                              child: EyeglassPrescriptionItem(this,
-                                  widget.eyeglassPrescriptions[index], index),
-                            );
+                        child: NotificationListener<
+                            OverscrollIndicatorNotification>(
+                          onNotification: (overscroll) {
+                            overscroll.disallowIndicator();
+                            return true;
                           },
+                          child: ListView.builder(
+                            itemCount: widget.eyeglassPrescriptions.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: index ==
+                                            widget.eyeglassPrescriptions
+                                                    .length -
+                                                1
+                                        ? DefaultProperties.moreMorePadding
+                                        : 0),
+                                child: EyeglassPrescriptionItem(this,
+                                    widget.eyeglassPrescriptions[index], index),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ))
+                ],
+              ),
+            ),
+          )
         : ShaderMask(
             shaderCallback: (Rect bounds) {
               return LinearGradient(

@@ -135,7 +135,7 @@ class AppointmentViewState extends State<AppointmentView> {
                       return Padding(
                         padding: EdgeInsets.only(
                             bottom: index == widget.appointments.length-1
-                                ? DefaultProperties.moreMorePadding
+                                ? DefaultProperties.doubleMorePadding
                                 : 0),
                         child: AppointmentItem(widget.appointments[index]),
                       );

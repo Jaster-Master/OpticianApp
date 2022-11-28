@@ -55,7 +55,7 @@ class EyeglassPrescriptionViewState extends State<EyeglassPrescriptionView> {
                   tab,
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(5),
+                      padding: EdgeInsets.all(DefaultProperties.lessPadding),
                       child: ShaderMask(
                         shaderCallback: (Rect bounds) {
                           return LinearGradient(

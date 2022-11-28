@@ -84,7 +84,7 @@ class EyeglassPrescriptionViewState extends State<EyeglassPrescriptionView> {
                                             widget.eyeglassPrescriptions
                                                     .length -
                                                 1
-                                        ? DefaultProperties.moreMorePadding
+                                        ? DefaultProperties.doubleMorePadding
                                         : 0),
                                 child: EyeglassPrescriptionItem(this,
                                     widget.eyeglassPrescriptions[index], index),
@@ -174,8 +174,8 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          top: DefaultProperties.moreMorePadding,
-          bottom: DefaultProperties.moreMorePadding),
+          top: DefaultProperties.doubleMorePadding,
+          bottom: DefaultProperties.doubleMorePadding),
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(

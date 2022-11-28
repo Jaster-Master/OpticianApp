@@ -298,7 +298,7 @@ class AppointmentItemState extends State<AppointmentItem> {
                 child: Container(
                   margin: EdgeInsets.only(
                       left: isLandscape
-                          ? DefaultProperties.moreMorePadding
+                          ? DefaultProperties.doubleMorePadding
                           : DefaultProperties.defaultPadding),
                   child: Container(
                     margin: EdgeInsets.all(DefaultProperties.defaultPadding),

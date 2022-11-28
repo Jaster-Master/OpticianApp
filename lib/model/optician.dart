@@ -9,7 +9,8 @@ class Optician {
   String email;
   String website;
   List<DateTime> availableAppointments;
+  bool isFavourite;
 
   Optician(this.name, this.description, this.locations, this.phoneNumber,
-      this.email, this.website, this.availableAppointments);
+      this.email, this.website, this.availableAppointments, this.isFavourite);
 }

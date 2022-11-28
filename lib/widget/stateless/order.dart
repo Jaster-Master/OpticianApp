@@ -93,7 +93,7 @@ class OrderView extends StatelessWidget {
                         return Padding(
                           padding: EdgeInsets.only(
                               bottom: index == orders.length-1
-                                  ? DefaultProperties.moreMorePadding
+                                  ? DefaultProperties.doubleMorePadding
                                   : 0),
                           child: OrderItem(orders[index]),
                         );

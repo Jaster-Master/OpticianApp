@@ -203,6 +203,15 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Text("Linkes Auge"),
+                        Text(" <- Wert -> "),
+                        Text("Rechtes Auge"),
+                      ],
+                    ),
+                    Text(""),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         Text(item.sphLeft.toString() ?? ""),
                         Text(" <- Sphäre -> "),
                         Text(item.sphRight.toString() ?? ""),
@@ -246,6 +255,15 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Text("Linkes Glas"),
+                        Text(" <- Wert -> "),
+                        Text("Rechtes Glas"),
+                      ],
+                    ),
+                    Text(""),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         Text(item.axisLeft.toString() ?? ""),
                         Text(" <- Achse -> "),
                         Text(item.axisRight.toString() ?? ""),
@@ -279,11 +297,17 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
                       Text(item.prism2Right.toString() ?? ""),
                     ]),
                     Text(""),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(item.basis2Left.toString() ?? ""),
-                      Text(" <- Basis-2 -> "),
-                      Text(item.basis2Right.toString() ?? ""),
-                    ]),
+                    Container(
+                      margin: EdgeInsets.only(
+                          bottom: DefaultProperties.tripleMorePadding),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(item.basis2Left.toString() ?? ""),
+                            Text(" <- Basis-2 -> "),
+                            Text(item.basis2Right.toString() ?? ""),
+                          ]),
+                    ),
                   ],
                 ),
               ),

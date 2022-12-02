@@ -1,3 +1,4 @@
+import 'package:clean_calendar/clean_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/default_properties.dart';
@@ -239,7 +240,7 @@ class PartnerDetailsItemView extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: Colors.black)),
                     ]),
-                    onPressed: () => {},
+                    onPressed: () => {showFreeDates(context)},
                   ),
                 ),
               ),
@@ -279,6 +280,15 @@ class PartnerDetailsItemView extends StatelessWidget {
 
   void goToLocations(Optician partner) {
     openLocationView(partner);
+  }
+
+  showFreeDates(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PartnerDateView(),
+      ),
+    );
   }
 }
 
@@ -404,5 +414,99 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
     widget.currentState.setState(() {
       widget.currentState.widget.showItem = true;
     });
+  }
+}
+
+class PartnerDateView extends StatefulWidget {
+  PartnerDateView({super.key});
+
+  @override
+  State<StatefulWidget> createState() => PartnerDateViewState();
+}
+
+class PartnerDateViewState extends State<PartnerDateView> {
+
+  @override
+  Widget build(BuildContext context) {
+    List<DateTime> selectedDates = getDates();
+    return Scaffold(
+        body: Padding(
+            padding: EdgeInsets.only(top: DefaultProperties.doubleMorePadding),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () => {Navigator.pop(context)},
+                        icon: Icon(Icons.arrow_back)),
+                    Text("Zurück"),
+                  ],
+                ),
+                CleanCalendar(
+                  datesForStreaks: getDates(),
+                  selectedDatesProperties: DatesProperties(
+                    datesDecoration: DatesDecoration(
+                      datesBorderRadius: 1000,
+                    ),
+                  ),
+                  onSelectedDates: (List<DateTime> value) {
+                    // If selected date picked again then removing it from selected dates.
+                    if (selectedDates.contains(value.first)) {
+                      selectedDates.remove(value.first);
+                    } else {
+                      // If unselected date picked then adding it to selected dates.
+                      selectedDates.add(value.first);
+                    }
+                    // setState to update the calendar with new selected dates.
+                    setState(() {});
+                  },
+                  leadingTrailingDatesProperties: DatesProperties(
+                    // To disable taps on leading and trailing dates.
+                    disable: true,
+
+                    // To hide leading and trailing dates.
+                    hide: true,
+                  ),
+                  streakDatesProperties: DatesProperties(
+                    datesDecoration: DatesDecoration(
+                      datesBorderRadius: 1000,
+                      datesBackgroundColor: Colors.lightGreen.shade100,
+                      datesBorderColor: Colors.green,
+                      datesTextColor: Colors.black,
+                    ),
+                  ),
+                  generalDatesProperties: DatesProperties(
+                    datesDecoration: DatesDecoration(
+                      datesBorderRadius: 1000,
+                      datesBackgroundColor: Colors.red.shade100,
+                      datesBorderColor: Colors.red,
+                      datesTextColor: Colors.white,
+                    ),
+                  ),
+                  // Providing calendar the dates to select in ui.
+                  selectedDates: selectedDates,
+                ),
+//TODO
+              ],
+            )));
+  }
+
+  onBackButton() {}
+
+  getDates() {
+    return [
+      DateTime(2022, 12, 5),
+      DateTime(2022, 12, 6),
+      DateTime(2022, 12, 7),
+      DateTime(2022, 12, 9),
+      DateTime(2022, 12, 10),
+      DateTime(2022, 12, 11),
+      DateTime(2022, 12, 13),
+      DateTime(2022, 12, 20),
+      DateTime(2022, 12, 21),
+      DateTime(2022, 12, 23),
+      DateTime(2022, 12, 24),
+    ];
   }
 }

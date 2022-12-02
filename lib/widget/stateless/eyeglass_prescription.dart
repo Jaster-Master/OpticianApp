@@ -44,84 +44,62 @@ class EyeglassPrescriptionViewState extends State<EyeglassPrescriptionView> {
       ],
     );
 
-    return index == -1
-        ? Padding(
-            padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
-            child: Padding(
-              padding: EdgeInsets.all(DefaultProperties.morePadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  tab,
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(DefaultProperties.lessPadding),
-                      child: ShaderMask(
-                        shaderCallback: (Rect bounds) {
-                          return LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.white,
-                              Colors.white.withOpacity(0.05)
-                            ],
-                            stops: [0.75, 1],
-                            tileMode: TileMode.mirror,
-                          ).createShader(bounds);
-                        },
-                        child: NotificationListener<
-                            OverscrollIndicatorNotification>(
-                          onNotification: (overscroll) {
-                            overscroll.disallowIndicator();
-                            return true;
-                          },
-                          child: ListView.builder(
-                            itemCount: widget.eyeglassPrescriptions.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: index ==
-                                            widget.eyeglassPrescriptions
-                                                    .length -
-                                                1
-                                        ? DefaultProperties.doubleMorePadding
-                                        : 0),
-                                child: EyeglassPrescriptionItem(this,
-                                    widget.eyeglassPrescriptions[index], index),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+    return Padding(
+      padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+      child: Padding(
+        padding: EdgeInsets.all(DefaultProperties.morePadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            tab,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(DefaultProperties.lessPadding),
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white, Colors.white.withOpacity(0.05)],
+                      stops: [0.75, 1],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds);
+                  },
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overscroll) {
+                      overscroll.disallowIndicator();
+                      return true;
+                    },
+                    child: ListView.builder(
+                      itemCount: widget.eyeglassPrescriptions.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              bottom: index ==
+                                      widget.eyeglassPrescriptions.length - 1
+                                  ? DefaultProperties.doubleMorePadding
+                                  : 0),
+                          child: EyeglassPrescriptionItem(
+                              widget.eyeglassPrescriptions[index], index),
+                        );
+                      },
                     ),
                   ),
-                ],
+                ),
               ),
             ),
-          )
-        : ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.white, Colors.white.withOpacity(0.05)],
-                stops: [0.75, 1],
-                tileMode: TileMode.mirror,
-              ).createShader(bounds);
-            },
-            child: EyeglassPrescriptionDetailView(
-                this, widget.eyeglassPrescriptions[index]),
-          );
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class EyeglassPrescriptionItem extends StatelessWidget {
-  EyeglassPrescriptionViewState currentState;
   EyeglassPrescription item;
   int index;
 
-  EyeglassPrescriptionItem(this.currentState, this.item, this.index,
-      {super.key});
+  EyeglassPrescriptionItem(this.item, this.index, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -158,17 +136,17 @@ class EyeglassPrescriptionItem extends StatelessWidget {
   }
 
   void onItemPress(BuildContext context, EyeglassPrescription item) {
-    currentState.setState(() {
-      currentState.index = index;
-    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EyeglassPrescriptionDetailView(item)));
   }
 }
 
 class EyeglassPrescriptionDetailView extends StatelessWidget {
-  EyeglassPrescriptionViewState currentState;
   EyeglassPrescription item;
 
-  EyeglassPrescriptionDetailView(this.currentState, this.item, {super.key});
+  EyeglassPrescriptionDetailView(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +163,7 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                      onPressed: () => {onBackButtonPress()},
+                      onPressed: () => {onBackButtonPress(context)},
                       icon: Icon(Icons.arrow_back)),
                   Text("Zurück"),
                 ],
@@ -318,9 +296,7 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
     );
   }
 
-  void onBackButtonPress() {
-    currentState.setState(() {
-      currentState.index = -1;
-    });
+  void onBackButtonPress(BuildContext context) {
+    Navigator.pop(context);
   }
 }

@@ -16,8 +16,8 @@ class NotificationService {
 
     AndroidNotificationChannel channel = AndroidNotificationChannel(
       notificationChannelId,
-      'MY FOREGROUND SERVICE',
-      description: 'This channel is used for important notifications.',
+      'OpticianApp Notifications',
+      description: 'This channel is used for optician notifications.',
       importance: Importance.low,
     );
 
@@ -28,14 +28,12 @@ class NotificationService {
 
     await service.configure(
         androidConfiguration: AndroidConfiguration(
-          onStart: onStart,
-          autoStart: true,
-          isForegroundMode: true,
-          notificationChannelId: notificationChannelId,
-          initialNotificationTitle: 'AWESOME SERVICE',
-          initialNotificationContent: 'Initializing',
-          foregroundServiceNotificationId: notificationId,
-        ),
+            onStart: onStart,
+            autoStart: true,
+            isForegroundMode: false,
+            notificationChannelId: notificationChannelId,
+            initialNotificationTitle: 'OpticianApp Service',
+            initialNotificationContent: 'Initializing'),
         iosConfiguration: IosConfiguration());
   }
 
@@ -43,12 +41,12 @@ class NotificationService {
     Timer.periodic(const Duration(seconds: 1), (timer) async {
       notificationHandler.flutterLocalNotificationsPlugin.show(
         notificationId,
-        'COOL SERVICE',
-        'Awesome ${DateTime.now()}',
+        'OpticianApp Service',
+        'Notification Service',
         NotificationDetails(
           android: AndroidNotificationDetails(
             notificationChannelId,
-            'MY FOREGROUND SERVICE',
+            'OpticianApp Service',
             icon: 'ic_bg_service_small',
             ongoing: true,
           ),

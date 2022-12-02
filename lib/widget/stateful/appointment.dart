@@ -55,7 +55,7 @@ class AppointmentViewState extends State<AppointmentView> {
           ),
           Spacer(),
           IconButton(
-            tooltip: "Aufträge",
+              tooltip: "Aufträge",
               color: DefaultProperties.grayColor,
               onPressed: () => onPress(),
               icon: Icon(
@@ -134,7 +134,7 @@ class AppointmentViewState extends State<AppointmentView> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.only(
-                            bottom: index == widget.appointments.length-1
+                            bottom: index == widget.appointments.length - 1
                                 ? DefaultProperties.doubleMorePadding
                                 : 0),
                         child: AppointmentItem(widget.appointments[index]),
@@ -238,7 +238,7 @@ class AppointmentItemState extends State<AppointmentItem> {
   Widget build(BuildContext context) {
     int days = widget.item.due.difference(DateTime.now()).inDays;
     if (days < 0) days = 0;
-    double height = 150;
+    double lineHeight = MediaQuery.of(context).size.height / 5;
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
 
@@ -247,7 +247,7 @@ class AppointmentItemState extends State<AppointmentItem> {
       decoration: BoxDecoration(
         border: Border(left: BorderSide(color: DefaultProperties.grayColor)),
       ),
-      child: SizedBox(height: height),
+      child: SizedBox(height: lineHeight),
     );
     var timelineDot = Container(
       margin: EdgeInsets.only(left: 15),
@@ -288,74 +288,70 @@ class AppointmentItemState extends State<AppointmentItem> {
           children: [timeline, timelineDot],
         ),
         Expanded(
-          child: SizedBox(
-            height: height,
-            child: Padding(
-              padding:
-                  EdgeInsets.only(bottom: DefaultProperties.defaultPadding),
-              child: GestureDetector(
-                onTap: () => {onItemPress(context, widget)},
+          child: Padding(
+            padding: EdgeInsets.only(bottom: DefaultProperties.defaultPadding),
+            child: GestureDetector(
+              onTap: () => {onItemPress(context, widget)},
+              child: Container(
+                margin: EdgeInsets.only(
+                    left: isLandscape
+                        ? DefaultProperties.doubleMorePadding
+                        : DefaultProperties.defaultPadding),
                 child: Container(
-                  margin: EdgeInsets.only(
-                      left: isLandscape
-                          ? DefaultProperties.doubleMorePadding
-                          : DefaultProperties.defaultPadding),
-                  child: Container(
-                    margin: EdgeInsets.all(DefaultProperties.defaultPadding),
-                    padding: EdgeInsets.all(DefaultProperties.defaultPadding),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                          DefaultProperties.defaultRounded),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.25),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 10.0)),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            descriptionText,
-                            Visibility(
-                              visible: widget.item.type == "TE",
-                              maintainSize: true,
-                              maintainAnimation: true,
-                              maintainState: true,
-                              child: PopupMenuButton(
-                                tooltip: "Menü anzeigen",
-                                constraints: BoxConstraints(),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: DefaultProperties.defaultPadding),
-                                  child: Icon(Icons.menu,
-                                      size: DefaultProperties.buttonSize),
-                                ),
-                                onSelected: (value) =>
-                                    {onMenuPress(context, value, widget)},
-                                itemBuilder: (BuildContext context) =>
-                                    <PopupMenuEntry>[
-                                  const PopupMenuItem(
-                                    value: 0,
-                                    child: Text('Bearbeiten'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 1,
-                                    child: Text('Löschen'),
-                                  ),
-                                ],
+                  margin: EdgeInsets.all(DefaultProperties.defaultPadding),
+                  padding: EdgeInsets.all(DefaultProperties.defaultPadding),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.circular(DefaultProperties.defaultRounded),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.25),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 10.0)),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          descriptionText,
+                          Visibility(
+                            visible: widget.item.type == "TE",
+                            maintainSize: true,
+                            maintainAnimation: true,
+                            maintainState: true,
+                            child: PopupMenuButton(
+                              tooltip: "Menü anzeigen",
+                              constraints: BoxConstraints(),
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: DefaultProperties.defaultPadding),
+                                child: Icon(Icons.menu,
+                                    size: DefaultProperties.buttonSize),
                               ),
+                              onSelected: (value) =>
+                                  {onMenuPress(context, value, widget)},
+                              itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry>[
+                                const PopupMenuItem(
+                                  value: 0,
+                                  child: Text('Bearbeiten'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 1,
+                                  child: Text('Löschen'),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        dateText,
-                        leftDaysText,
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                      dateText,
+                      leftDaysText,
+                    ],
                   ),
                 ),
               ),

@@ -7,6 +7,7 @@ class DefaultProperties {
   static const double fontSize1 = 24;
   static const double fontSize2 = 20;
   static const double fontSize3 = 16;
+  static const double fontSize4 = 14;
   static const double lessPadding = 5;
   static const double defaultPadding = 10;
   static const double morePadding = 20;

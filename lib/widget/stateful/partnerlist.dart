@@ -8,12 +8,13 @@ import 'package:collection/collection.dart';
 import 'package:opticianapp/widget/stateful/partnerlist_details.dart';
 
 var location = Location("country", "zipCode", "city", "street", "streetNumber");
+var location2 = Location("country2", "zipCode2", "city2", "street2", "streetNumber2");
 
 class PartnerListView extends StatefulWidget {
   List<Optician> partner = [
-    Optician("Alex", "Test", [location], location, "null", "null", "null",
+    Optician("Alex", "Test", [location, location2], location, "null", "null", "null",
         [DateTime.now().add(Duration(days: 1)), DateTime.now()], false),
-    Optician("Nom", "Test", [location], location, "null", "null", "null",
+    Optician("Nom", "Test", [location, location2], location, "null", "null", "null",
         [DateTime.now().add(Duration(days: 1)), DateTime.now()], false)
   ];
   Map<String, List<Optician>> listViewValues = {};

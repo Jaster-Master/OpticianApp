@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/model/location.dart';
 import 'package:opticianapp/model/optician.dart';
+import 'package:opticianapp/widget/stateful/partnerlist_details.dart';
 
 class PartnerDetailsView extends StatefulWidget {
   Optician partner;
-  bool showItem = true;
 
   PartnerDetailsView(this.partner, {super.key});
 
@@ -55,9 +55,7 @@ class PartnerDetailsViewState extends State<PartnerDetailsView> {
                   color: DefaultProperties.blueColor),
             ),
           ),
-          widget.showItem
-              ? PartnerDetailsItemView(openLocationsView, widget.partner)
-              : PartnerLocationsView(this, widget.partner),
+          PartnerDetailsItemView(widget.partner),
         ],
       ),
     );
@@ -66,20 +64,18 @@ class PartnerDetailsViewState extends State<PartnerDetailsView> {
   void onBackButton() {
     Navigator.pop(context);
   }
-
-  void openLocationsView(Optician partner) {
-    setState(() {
-      widget.showItem = false;
-    });
-  }
 }
 
-class PartnerDetailsItemView extends StatelessWidget {
-  ValueChanged<Optician> openLocationView;
+class PartnerDetailsItemView extends StatefulWidget {
   Optician partner;
 
-  PartnerDetailsItemView(this.openLocationView, this.partner, {super.key});
+  PartnerDetailsItemView(this.partner, {super.key});
 
+  @override
+  State<StatefulWidget> createState() => PartnerDetailsItemViewState();
+}
+
+class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -100,38 +96,47 @@ class PartnerDetailsItemView extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(partner.name,
+              Text(widget.partner.name,
                   style: TextStyle(fontSize: DefaultProperties.fontSize1)),
               Spacer(),
               Icon(Icons.star, color: DefaultProperties.blueColor)
             ],
           ),
-          GestureDetector(
-            onTap: () => goToLocations(partner),
-            child: Row(
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.only(right: DefaultProperties.defaultPadding),
-                  child: Icon(Icons.location_on_outlined),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                        partner.locations[0].street +
-                            " " +
-                            partner.locations[0].streetNumber,
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize2)),
-                    Text(
-                        partner.locations[0].zipCode +
-                            " " +
-                            partner.locations[0].city,
-                        style: TextStyle(fontSize: DefaultProperties.fontSize2))
-                  ],
-                ),
-              ],
+          Container(
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            padding: EdgeInsets.only(top: 10, bottom: 10),
+            decoration: BoxDecoration(
+              border: Border(
+                  bottom: BorderSide(color: Colors.grey.withOpacity(0.25)),
+                  top: BorderSide(color: Colors.grey.withOpacity(0.25))),
+            ),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => goToLocations(context, widget.partner),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: DefaultProperties.defaultPadding),
+                    child: Icon(Icons.location_on_outlined),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          "${widget.partner.favouriteLocation.street} ${widget.partner.favouriteLocation.streetNumber}",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize2)),
+                      Text(
+                          "${widget.partner.favouriteLocation.zipCode} ${widget.partner.favouriteLocation.city}",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize2))
+                    ],
+                  ),
+                  Spacer(),
+                  Icon(Icons.keyboard_arrow_right),
+                ],
+              ),
             ),
           ),
           Column(
@@ -156,7 +161,7 @@ class PartnerDetailsItemView extends StatelessWidget {
                               right: DefaultProperties.defaultPadding),
                           child: Icon(Icons.phone_outlined),
                         ),
-                        Text(partner.phoneNumber,
+                        Text(widget.partner.phoneNumber,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.black))
                       ],
@@ -183,7 +188,7 @@ class PartnerDetailsItemView extends StatelessWidget {
                             right: DefaultProperties.defaultPadding),
                         child: Icon(Icons.mail_outlined),
                       ),
-                      Text(partner.email,
+                      Text(widget.partner.email,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: Colors.black)),
                     ]),
@@ -210,7 +215,7 @@ class PartnerDetailsItemView extends StatelessWidget {
                               right: DefaultProperties.defaultPadding),
                           child: Icon(Icons.public_outlined),
                         ),
-                        Text(partner.website,
+                        Text(widget.partner.website,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(color: Colors.black)),
                       ],
@@ -278,8 +283,14 @@ class PartnerDetailsItemView extends StatelessWidget {
     );
   }
 
-  void goToLocations(Optician partner) {
-    openLocationView(partner);
+  void goToLocations(BuildContext context, Optician partner) {
+    var result = Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PartnerLocationsView(partner),
+      ),
+    );
+    result.then((value) => setState(() {}));
   }
 
   showFreeDates(BuildContext context) {
@@ -293,10 +304,9 @@ class PartnerDetailsItemView extends StatelessWidget {
 }
 
 class PartnerLocationsView extends StatefulWidget {
-  PartnerDetailsViewState currentState;
   Optician partner;
 
-  PartnerLocationsView(this.currentState, this.partner, {super.key});
+  PartnerLocationsView(this.partner, {super.key});
 
   @override
   State<StatefulWidget> createState() => PartnerLocationsViewState();
@@ -310,24 +320,33 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.all(DefaultProperties.defaultPadding),
+            padding: EdgeInsets.only(top: DefaultProperties.doubleMorePadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
                     onPressed: () => {Navigator.pop(context)},
                     icon: Icon(Icons.arrow_back)),
-                Text("Zurück"),
+                Text("Zurück",
+                    style: TextStyle(fontSize: DefaultProperties.fontSize2)),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(DefaultProperties.defaultPadding),
-            child: Text(widget.partner.name),
+            padding: EdgeInsets.all(DefaultProperties.lessPadding),
+            child: Text(
+              widget.partner.name,
+              style: TextStyle(fontSize: DefaultProperties.fontSize1),
+            ),
           ),
           Padding(
-            padding: EdgeInsets.all(DefaultProperties.defaultPadding),
-            child: Text("Bitte noch machen i heul"),
+            padding: EdgeInsets.all(DefaultProperties.lessPadding),
+            child: Text(
+              "Bitte noch machen i heul",
+              style: TextStyle(
+                  fontSize: DefaultProperties.fontSize2,
+                  color: DefaultProperties.blueColor),
+            ),
           ),
           Expanded(
             child: Padding(
@@ -348,15 +367,34 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
                     return true;
                   },
                   child: ListView.builder(
-                    itemCount: widget.partner.locations.length,
+                    itemCount: widget.partner.locations.length + 1,
                     itemBuilder: (context, index) {
+                      Widget item = SizedBox.shrink();
+                      if (index == 0) {
+                        item = Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: DefaultProperties.lightGrayColor,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          child: Text("Filialen",
+                              style: TextStyle(
+                                  fontSize: DefaultProperties.fontSize2)),
+                        );
+                      } else {
+                        index--;
+                        item = PartnerLocationListItem(
+                            this, widget.partner, index);
+                      }
                       return Padding(
                         padding: EdgeInsets.only(
                             bottom: index == widget.partner.locations.length - 1
                                 ? DefaultProperties.doubleMorePadding
                                 : 0),
-                        child: PartnerLocationListItem(
-                            widget.currentState, widget.partner, index),
+                        child: item,
                       );
                     },
                   ),
@@ -371,7 +409,7 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
 }
 
 class PartnerLocationListItem extends StatefulWidget {
-  PartnerDetailsViewState currentState;
+  PartnerLocationsViewState currentState;
   Optician partner;
   int index;
 
@@ -387,33 +425,55 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
   Widget build(BuildContext context) {
     var location = widget.partner.locations[widget.index];
     var isFavourite = widget.partner.favouriteLocation == location;
-    return Row(
-      children: [
-        Column(
+    return InkWell(
+      onTap: () => {
+        makeLocationFavouriteAndGoBackToDetails(
+            context, widget.partner, location)
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: DefaultProperties.lightGrayColor,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
           children: [
-            Text(location.city),
-            Text(location.street + " " + location.streetNumber)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(location.city,
+                    style: TextStyle(fontSize: DefaultProperties.fontSize3)),
+                Text(location.street + " " + location.streetNumber,
+                    style: TextStyle(fontSize: DefaultProperties.fontSize4))
+              ],
+            ),
+            Spacer(),
+            IconButton(
+                onPressed: () =>
+                    {makeLocationFavourite(widget.partner, location)},
+                icon: Icon(isFavourite ? Icons.star : Icons.star_outline,
+                    color: DefaultProperties.blueColor)),
+            IconButton(
+                onPressed: () => {}, icon: Icon(Icons.keyboard_arrow_right))
           ],
         ),
-        Spacer(),
-        IconButton(
-            onPressed: () => {makeLocationFavourite(widget.partner, location)},
-            icon: Icon(isFavourite ? Icons.star : Icons.star_outline)),
-        IconButton(
-            onPressed: () => {goBackToDetailsItem()},
-            icon: Icon(Icons.arrow_forward))
-      ],
+      ),
     );
   }
 
   void makeLocationFavourite(Optician partner, Location location) {
-    partner.favouriteLocation = location;
+    widget.currentState.setState(() {
+      partner.favouriteLocation = location;
+    });
   }
 
-  void goBackToDetailsItem() {
-    widget.currentState.setState(() {
-      widget.currentState.widget.showItem = true;
-    });
+  void makeLocationFavouriteAndGoBackToDetails(
+      BuildContext context, Optician partner, Location location) {
+    makeLocationFavourite(partner, location);
+    Navigator.pop(context);
   }
 }
 
@@ -425,71 +485,117 @@ class PartnerDateView extends StatefulWidget {
 }
 
 class PartnerDateViewState extends State<PartnerDateView> {
-
   @override
   Widget build(BuildContext context) {
     List<DateTime> selectedDates = getDates();
     return Scaffold(
-        body: Padding(
-            padding: EdgeInsets.only(top: DefaultProperties.doubleMorePadding),
-            child: Column(
+      body: Padding(
+        padding: EdgeInsets.only(top: DefaultProperties.doubleMorePadding),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () => {Navigator.pop(context)},
-                        icon: Icon(Icons.arrow_back)),
-                    Text("Zurück"),
+                IconButton(
+                    onPressed: () => {Navigator.pop(context)},
+                    icon: Icon(Icons.arrow_back)),
+                Text("Zurück",
+                    style: TextStyle(fontSize: DefaultProperties.fontSize2)),
+              ],
+            ),
+            CleanCalendar(
+              selectedDatesProperties: DatesProperties(
+                datesDecoration: DatesDecoration(
+                  datesBackgroundColor: Colors.lightGreen.shade100,
+                  datesBorderColor: Colors.green,
+                  datesTextColor: Colors.black,
+                ),
+              ),
+              leadingTrailingDatesProperties: DatesProperties(
+                disable: true,
+                hide: true,
+              ),
+              generalDatesProperties: DatesProperties(
+                datesDecoration: DatesDecoration(
+                  datesBackgroundColor: Colors.red.shade100,
+                  datesBorderColor: Colors.red,
+                  datesTextColor: Colors.white,
+                ),
+              ),
+              selectedDates: selectedDates,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showBookDialog() {
+    TextEditingController date = TextEditingController();
+    date.text = DefaultProperties.defaultDateFormat.format(DateTime.now());
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Text('Erinnerung erstellen'),
+            content: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Titel',
+                        icon: Icon(Icons.title),
+                      ),
+                    ),
+                    TextField(
+                      controller: date,
+                      decoration: InputDecoration(
+                        labelText: 'Datum',
+                        icon: Icon(Icons.calendar_today),
+                      ),
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101));
+
+                        if (pickedDate != null) {
+                          String formattedDate = DefaultProperties
+                              .defaultDateFormat
+                              .format(pickedDate);
+                          setState(() {
+                            date.text = formattedDate;
+                          });
+                        }
+                      },
+                    ),
                   ],
                 ),
-                CleanCalendar(
-                  datesForStreaks: getDates(),
-                  selectedDatesProperties: DatesProperties(
-                    datesDecoration: DatesDecoration(
-                      datesBorderRadius: 1000,
-                    ),
-                  ),
-                  onSelectedDates: (List<DateTime> value) {
-                    // If selected date picked again then removing it from selected dates.
-                    if (selectedDates.contains(value.first)) {
-                      selectedDates.remove(value.first);
-                    } else {
-                      // If unselected date picked then adding it to selected dates.
-                      selectedDates.add(value.first);
-                    }
-                    // setState to update the calendar with new selected dates.
-                    setState(() {});
-                  },
-                  leadingTrailingDatesProperties: DatesProperties(
-                    // To disable taps on leading and trailing dates.
-                    disable: true,
+              ),
+            ),
+            actions: [
+              TextButton(
+                  child: Text("Abbrechen"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              TextButton(
+                  child: Text("Buchen"),
+                  onPressed: () {
+                    setState(() {
+                      // TODO book
+                    });
 
-                    // To hide leading and trailing dates.
-                    hide: true,
-                  ),
-                  streakDatesProperties: DatesProperties(
-                    datesDecoration: DatesDecoration(
-                      datesBorderRadius: 1000,
-                      datesBackgroundColor: Colors.lightGreen.shade100,
-                      datesBorderColor: Colors.green,
-                      datesTextColor: Colors.black,
-                    ),
-                  ),
-                  generalDatesProperties: DatesProperties(
-                    datesDecoration: DatesDecoration(
-                      datesBorderRadius: 1000,
-                      datesBackgroundColor: Colors.red.shade100,
-                      datesBorderColor: Colors.red,
-                      datesTextColor: Colors.white,
-                    ),
-                  ),
-                  // Providing calendar the dates to select in ui.
-                  selectedDates: selectedDates,
-                ),
-//TODO
-              ],
-            )));
+                    Navigator.pop(context);
+                  }),
+            ],
+          );
+        });
   }
 
   onBackButton() {}

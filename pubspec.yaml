@@ -41,6 +41,7 @@ dependencies:
   flutter_background_service: ^2.4.5
   intl: ^0.17.0
   clean_calendar: ^0.6.2
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:

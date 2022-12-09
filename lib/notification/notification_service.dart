@@ -1,57 +1,39 @@
 import 'dart:async';
+
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart';
 import 'package:opticianapp/notification/notification_handler.dart';
 
 class NotificationService {
-  NotificationHandler notificationHandler;
-  String notificationChannelId = 'goblinmaster';
-  int notificationId = 1;
-
-  NotificationService(this.notificationHandler, this.notificationChannelId,
-      this.notificationId);
+  static NotificationHandler notificationHandler = NotificationHandler();
 
   Future<void> initializeService() async {
+    notificationHandler.init();
     final service = FlutterBackgroundService();
 
-    AndroidNotificationChannel channel = AndroidNotificationChannel(
-      notificationChannelId,
-      'OpticianApp Notifications',
-      description: 'This channel is used for optician notifications.',
-      importance: Importance.low,
-    );
-
-    await notificationHandler.flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-
-    await service.configure(
-        androidConfiguration: AndroidConfiguration(
-            onStart: onStart,
-            autoStart: true,
-            isForegroundMode: false,
-            notificationChannelId: notificationChannelId,
-            initialNotificationTitle: 'OpticianApp Service',
-            initialNotificationContent: 'Initializing'),
-        iosConfiguration: IosConfiguration());
+    var androidConf = AndroidConfiguration(
+        onStart: onStart,
+        isForegroundMode: false,
+        autoStart: true,
+        autoStartOnBoot: true);
+    var iosConf = IosConfiguration(
+        onForeground: onStart, onBackground: onIosBackground, autoStart: true);
+    service.configure(
+        iosConfiguration: iosConf, androidConfiguration: androidConf);
+    bool isRunning = await service.isRunning();
+    if (!isRunning) {
+      service.startService();
+    }
   }
 
-  Future<void> onStart(ServiceInstance service) async {
-    Timer.periodic(const Duration(seconds: 1), (timer) async {
-      notificationHandler.flutterLocalNotificationsPlugin.show(
-        notificationId,
-        'OpticianApp Service',
-        'Notification Service',
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            notificationChannelId,
-            'OpticianApp Service',
-            icon: 'ic_bg_service_small',
-            ongoing: true,
-          ),
-        ),
-      );
-    });
+  Future<bool> onIosBackground(ServiceInstance service) async {
+    return true;
+  }
+
+  static Future<void> onStart(ServiceInstance service) async {
+    final Client client = Client();
+    while(true){
+      // TODO: get response from server to display notification
+    }
   }
 }

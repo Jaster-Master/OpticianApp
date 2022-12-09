@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:opticianapp/notification/notification_service.dart';
 import 'package:opticianapp/widget/stateful/login.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // NotificationService().initializeService();
   runApp(const OpticianApp());
 }
 

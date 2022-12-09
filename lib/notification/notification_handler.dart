@@ -1,14 +1,28 @@
+import 'dart:math';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHandler {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  String notificationChannelId = 'goblinmaster';
+  int notificationId = 1;
 
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  void init(){
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  void init() {
     flutterLocalNotificationsPlugin.initialize(const InitializationSettings(
-      android: AndroidInitializationSettings('launch_background')
-    ));
+        android: AndroidInitializationSettings('launch_background'),
+        iOS: DarwinInitializationSettings()));
+    AndroidNotificationChannel channel = AndroidNotificationChannel(
+      notificationChannelId,
+      'OpticianApp Notifications',
+      description: 'This channel is used for optician notifications.',
+      importance: Importance.low,
+    );
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
   }
 
   Future<bool?> requestPermission() async {
@@ -20,15 +34,21 @@ class NotificationHandler {
   }
 
   void showNotification(String title, String body) async {
+    /*bool? hasPermission = await requestPermission();
+    if (hasPermission == null || !hasPermission) return;*/
     const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('1', 'goblinmaster',
-            channelDescription: 'Optician-App',
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker');
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidNotificationDetails);
+        AndroidNotificationDetails(
+      '1',
+      'goblinmaster',
+      channelDescription: 'Optician-App',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      icon: 'notification_icon'
+    );
+    const NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, iOS: DarwinNotificationDetails());
     await flutterLocalNotificationsPlugin.show(
-        0, title, body, notificationDetails);
+        notificationId++, title, body, notificationDetails);
   }
 }

@@ -125,9 +125,12 @@ class EyeglassPrescriptionItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Brillenpass"),
-              Text("vom " +
-                  DefaultProperties.defaultDateFormat.format(item.date))
+              Text("Brillenpass",
+                  style: TextStyle(fontSize: DefaultProperties.fontSize2)),
+              Text(
+                  "vom " +
+                      DefaultProperties.defaultDateFormat.format(item.date),
+                  style: TextStyle(fontSize: DefaultProperties.fontSize3))
             ],
           ),
         ),
@@ -150,12 +153,12 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: DefaultProperties.doubleMorePadding,
-          bottom: DefaultProperties.doubleMorePadding),
-      child: Scaffold(
-        body: SingleChildScrollView(
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.only(
+            top: DefaultProperties.doubleMorePadding,
+            bottom: DefaultProperties.doubleMorePadding),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -165,61 +168,102 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
                   IconButton(
                       onPressed: () => {onBackButtonPress(context)},
                       icon: Icon(Icons.arrow_back)),
-                  Text("Zurück"),
+                  Text("Zurück",
+                      style: TextStyle(fontSize: DefaultProperties.fontSize2)),
                 ],
               ),
-              Text(item.text ?? ""),
+              Text(item.text ?? "",
+                  style: TextStyle(fontSize: DefaultProperties.fontSize1)),
               ExpansionTile(
-                title: Text("Persönlich"),
-                children: [Text(item.forename ?? ""), Text(item.surname ?? "")],
+                title: Text("Persönlich",
+                    style: TextStyle(fontSize: DefaultProperties.fontSize2)),
+                children: [
+                  Text(item.forename ?? "",
+                      style: TextStyle(fontSize: DefaultProperties.fontSize3)),
+                  Text(item.surname ?? "",
+                      style: TextStyle(fontSize: DefaultProperties.fontSize3))
+                ],
               ),
               Visibility(
                 visible: item.type[1] == "B",
                 child: ExpansionTile(
-                  title: Text("Augen"),
+                  title: Text("Augen",
+                      style: TextStyle(fontSize: DefaultProperties.fontSize2)),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Linkes Auge"),
-                        Text(" <- Wert -> "),
-                        Text("Rechtes Auge"),
+                        Text("Linkes Auge",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Wert -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text("Rechtes Auge",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
                     Text(""),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.sphLeft.toString() ?? ""),
-                        Text(" <- Sphäre -> "),
-                        Text(item.sphRight.toString() ?? ""),
+                        Text(item.sphLeft.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Sphäre -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(item.sphRight.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
                     Text(""),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.cylLeft.toString() ?? ""),
-                        Text(" <- Zylinderwert -> "),
-                        Text(item.cylRight.toString() ?? ""),
+                        Text(item.cylLeft.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Zylinderwert -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(item.cylRight.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
                     Text(""),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.pdLeft.toString() ?? ""),
-                        Text(" <- Pupillendistanz -> "),
-                        Text(item.pdRight.toString() ?? ""),
+                        Text(item.pdLeft.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Pupillendistanz -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(item.pdRight.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.hightLeft.toString() ?? ""),
-                        Text(" <- Höhe -> "),
-                        Text(item.hightRight.toString() ?? ""),
+                        Text(item.hightLeft.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Höhe -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(item.hightRight.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     )
                   ],
@@ -228,62 +272,117 @@ class EyeglassPrescriptionDetailView extends StatelessWidget {
               Visibility(
                 visible: item.type[1] == "B",
                 child: ExpansionTile(
-                  title: Text("Gläser"),
+                  title: Text("Gläser",
+                      style: TextStyle(fontSize: DefaultProperties.fontSize2)),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Linkes Glas"),
-                        Text(" <- Wert -> "),
-                        Text("Rechtes Glas"),
+                        Text("Linkes Glas",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Wert -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text("Rechtes Glas",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.axisLeft.toString() ?? ""),
-                        Text(" <- Achse -> "),
-                        Text(item.axisRight.toString() ?? ""),
+                        Text(item.axisLeft.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- Achse -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(item.axisRight.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(item.addLeft.toString() ?? ""),
-                        Text(" <- ADD-Wert -> "),
-                        Text(item.addRight.toString() ?? ""),
+                        Text(item.addLeft.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(" <- ADD-Wert -> ",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                        Text(item.addRight.toString() ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(item.prism1Left.toString() ?? ""),
-                      Text(" <- Prisma-1 -> "),
-                      Text(item.prism1Right.toString() ?? ""),
+                      Text(item.prism1Left.toString() ?? "",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
+                      Text(" <- Prisma-1 -> ",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
+                      Text(item.prism1Right.toString() ?? "",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
                     ]),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(item.basis1Left.toString() ?? ""),
-                      Text(" <- Basis-1 -> "),
-                      Text(item.basis1Right.toString() ?? ""),
+                      Text(item.basis1Left.toString() ?? "",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
+                      Text(" <- Basis-1 -> ",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
+                      Text(item.basis1Right.toString() ?? "",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
                     ]),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(item.prism2Left.toString() ?? ""),
-                      Text(" <- Prisma-2 -> "),
-                      Text(item.prism2Right.toString() ?? ""),
+                      Text(item.prism2Left.toString() ?? "",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
+                      Text(" <- Prisma-2 -> ",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
+                      Text(item.prism2Right.toString() ?? "",
+                          style:
+                              TextStyle(fontSize: DefaultProperties.fontSize3)),
                     ]),
-                    Text(""),
+                    Text("",
+                        style:
+                            TextStyle(fontSize: DefaultProperties.fontSize3)),
                     Container(
                       margin: EdgeInsets.only(
                           bottom: DefaultProperties.tripleMorePadding),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(item.basis2Left.toString() ?? ""),
-                            Text(" <- Basis-2 -> "),
-                            Text(item.basis2Right.toString() ?? ""),
+                            Text(item.basis2Left.toString() ?? "",
+                                style: TextStyle(
+                                    fontSize: DefaultProperties.fontSize3)),
+                            Text(" <- Basis-2 -> ",
+                                style: TextStyle(
+                                    fontSize: DefaultProperties.fontSize3)),
+                            Text(item.basis2Right.toString() ?? "",
+                                style: TextStyle(
+                                    fontSize: DefaultProperties.fontSize3)),
                           ]),
                     ),
                   ],

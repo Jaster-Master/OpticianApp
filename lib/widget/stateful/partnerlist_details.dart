@@ -102,42 +102,48 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
               Icon(Icons.star, color: DefaultProperties.blueColor)
             ],
           ),
-          Container(
-            margin: EdgeInsets.only(top: 10, bottom: 10),
-            padding: EdgeInsets.only(top: 10, bottom: 10),
-            decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(color: Colors.grey.withOpacity(0.25)),
-                  top: BorderSide(color: Colors.grey.withOpacity(0.25))),
-            ),
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
+          SizedBox(
+            height: 10,
+          ),
+          Material(
+            child: InkWell(
               onTap: () => goToLocations(context, widget.partner),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: DefaultProperties.defaultPadding),
-                    child: Icon(Icons.location_on_outlined),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          "${widget.partner.favouriteLocation.street} ${widget.partner.favouriteLocation.streetNumber}",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize2)),
-                      Text(
-                          "${widget.partner.favouriteLocation.zipCode} ${widget.partner.favouriteLocation.city}",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize2))
-                    ],
-                  ),
-                  Spacer(),
-                  Icon(Icons.keyboard_arrow_right),
-                ],
+              child: Container(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: Colors.grey.withOpacity(0.25)),
+                      top: BorderSide(color: Colors.grey.withOpacity(0.25))),
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                          right: DefaultProperties.defaultPadding),
+                      child: Icon(Icons.location_on_outlined),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            "${widget.partner.favouriteLocation.street} ${widget.partner.favouriteLocation.streetNumber}",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize2)),
+                        Text(
+                            "${widget.partner.favouriteLocation.zipCode} ${widget.partner.favouriteLocation.city}",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize2))
+                      ],
+                    ),
+                    Spacer(),
+                    Icon(Icons.keyboard_arrow_right),
+                  ],
+                ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -163,7 +169,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                         ),
                         Text(widget.partner.phoneNumber,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.black))
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: DefaultProperties.fontSize3))
                       ],
                     ),
                     onPressed: () => {},
@@ -190,7 +198,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                       ),
                       Text(widget.partner.email,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.black)),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: DefaultProperties.fontSize3)),
                     ]),
                     onPressed: () => {},
                   ),
@@ -217,7 +227,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                         ),
                         Text(widget.partner.website,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.black)),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
                     onPressed: () => {},
@@ -243,7 +255,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                           child: Icon(Icons.calendar_today_outlined)),
                       Text("Freie Termine",
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.black)),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: DefaultProperties.fontSize3)),
                     ]),
                     onPressed: () => {showFreeDates(context)},
                   ),
@@ -269,7 +283,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                             child: Icon(Icons.person_add_outlined)),
                         Text("Kontaktdaten speichern",
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.black))
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: DefaultProperties.fontSize3))
                       ],
                     ),
                     onPressed: () => {},
@@ -293,7 +309,7 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
     result.then((value) => setState(() {}));
   }
 
-  showFreeDates(BuildContext context) {
+  void showFreeDates(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -350,7 +366,7 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(DefaultProperties.morePadding),
               child: ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return LinearGradient(
@@ -457,7 +473,11 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
                 icon: Icon(isFavourite ? Icons.star : Icons.star_outline,
                     color: DefaultProperties.blueColor)),
             IconButton(
-                onPressed: () => {}, icon: Icon(Icons.keyboard_arrow_right))
+                onPressed: () => {
+                      makeLocationFavouriteAndGoBackToDetails(
+                          context, widget.partner, location)
+                    },
+                icon: Icon(Icons.keyboard_arrow_right))
           ],
         ),
       ),

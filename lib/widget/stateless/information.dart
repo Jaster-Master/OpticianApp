@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/default_properties.dart';
+import 'package:opticianapp/widget/stateful/login.dart';
+import 'package:opticianapp/widget/stateless/about.dart';
+import 'package:opticianapp/widget/stateless/faq.dart';
+import 'package:opticianapp/widget/stateless/feedback.dart';
+import 'package:opticianapp/widget/stateless/imprint.dart';
 
 class InformationView extends StatelessWidget {
   const InformationView({super.key});

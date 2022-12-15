@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
-class AboutView extends StatelessWidget{
+class AboutView extends StatelessWidget {
   const AboutView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Text("About");
   }
 }

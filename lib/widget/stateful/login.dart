@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/widget/stateful/page_slider.dart';
+import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -12,36 +16,67 @@ class LoginView extends StatefulWidget {
 }
 
 class LoginViewState extends State<LoginView> {
-  String? errorText;
+  final _formKey = GlobalKey<FormState>();
+  String? errorText = null;
+  String? errorTextUserData = null;
+  String userName = "";
+  String password = "";
 
   @override
   Widget build(BuildContext context) {
+    setHasNetworkConnection();
+    addNetworkConnectionListener();
     var loginLogo = Padding(
       padding: EdgeInsets.all(DefaultProperties.morePadding),
       child: Image(image: AssetImage("assets/asabit-logo.png")),
     );
     var usernameField = Padding(
       padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius:
-                BorderRadius.circular(DefaultProperties.defaultRounded),
-          ),
-          labelText: 'Benutzernamen eingeben',
-        ),
+            border: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(DefaultProperties.defaultRounded),
+            ),
+            labelText: 'Benutzernamen eingeben',
+            errorMaxLines: 3,
+            errorStyle: TextStyle(color: Colors.red)),
+        onChanged: (value) {
+          userName = value;
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Bitte geben Sie einen Benutzernamen ein!";
+          }
+          return null;
+        },
       ),
     );
+    //var numbers = ['0','1','2','3','4','5','6','7','8','9'];
     var passwordField = Padding(
       padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius:
-                BorderRadius.circular(DefaultProperties.defaultRounded),
-          ),
-          labelText: 'Passwort eingeben',
-        ),
+            border: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(DefaultProperties.defaultRounded),
+            ),
+            labelText: 'Passwort eingeben',
+            errorMaxLines: 3,
+            errorStyle: TextStyle(color: Colors.red)),
+        onChanged: (value) {
+          password = value;
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Bitte geben Sie ein Passwort ein!";
+          }
+          if (value.length < 12) {
+            return "Bitte geben Sie ein Passwort mit mindestens 12 Zeichen ein!";
+          }
+
+          return null;
+        },
         obscureText: true,
       ),
     );
@@ -50,7 +85,21 @@ class LoginViewState extends State<LoginView> {
       child: Padding(
         padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
         child: Text(errorText ?? "",
-            style: TextStyle(fontSize: DefaultProperties.fontSize1)),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: DefaultProperties.fontSize3, color: Colors.red)),
+      ),
+    );
+    var errorTextWidgetCheckUserData = Visibility(
+      visible: errorTextUserData != null && errorText == null,
+      child: Padding(
+        padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+        child: Text(errorTextUserData ?? "",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: DefaultProperties.fontSize3,
+              color: Colors.red,
+            )),
       ),
     );
     var loginButton = Padding(
@@ -72,18 +121,21 @@ class LoginViewState extends State<LoginView> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            children: [
-              loginLogo,
-              usernameField,
-              passwordField,
-              errorTextWidget,
-              loginButton,
-            ],
+      body: Form(
+        key: _formKey,
+        child: Center(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              children: [
+                loginLogo,
+                usernameField,
+                passwordField,
+                errorTextWidget,
+                errorTextWidgetCheckUserData,
+                loginButton,
+              ],
+            ),
           ),
         ),
       ),
@@ -91,14 +143,87 @@ class LoginViewState extends State<LoginView> {
   }
 
   void onLogin() {
-    JsonReader.initData().then((value) => {
+    if (!_formKey.currentState!.validate()) return;
+    setHasNetworkConnection().then((value) => {
           if (value)
             {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => PageSlider(true)),
-              )
+              checkUserData(userName, password).then((value) => {
+                    if (value)
+                      {
+                        JsonReader.initData().then((value) => {
+                              if (value)
+                                {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PageSlider(true)),
+                                  ),
+                                }
+                            }),
+                      }
+                  }),
             }
         });
+  }
+
+  Future<bool> checkUserData(String userName, String password) async {
+    var url = Uri.https(DefaultProperties.serverIpAddress, '/checkUserData');
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        if (response.body == "true") {
+          setState(() {
+            errorTextUserData = null;
+          });
+          return true;
+        }
+        setState(() {
+          errorTextUserData =
+              "Diese Benutzerdaten sind ungültig oder existieren nicht!";
+        });
+        return false;
+      } else {
+        setState(() {
+          errorTextUserData =
+              "Es ist ein Fehler beim Verbinden zum Server aufgetreten!";
+        });
+        return false;
+      }
+    } catch (e) {
+      setState(() {
+        errorTextUserData =
+            "Es ist ein Fehler beim Verbinden zum Server aufgetreten!";
+      });
+      return false;
+    }
+  }
+
+  void addNetworkConnectionListener() async {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
+        setState(() {
+          errorText = "Keine Internetverbindung möglich";
+        });
+      } else {
+        setState(() {
+          errorText = null;
+        });
+      }
+    });
+  }
+
+  Future<bool> setHasNetworkConnection() async {
+    ConnectivityResult result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      setState(() {
+        errorText = "Keine Internetverbindung möglich.";
+      });
+      return false;
+    } else {
+      setState(() {
+        errorText = null;
+      });
+      return true;
+    }
   }
 }

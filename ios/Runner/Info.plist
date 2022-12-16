@@ -47,5 +47,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIRequiredDeviceCapabilities</key>
+        <array>
+          <!-- ... -->
+          <string>network</string>
+        </array>
 </dict>
 </plist>

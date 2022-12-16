@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.goblinmaster.opticianapp">
+          package="com.goblinmaster.opticianapp">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="opticianapp"
         android:name="${applicationName}"

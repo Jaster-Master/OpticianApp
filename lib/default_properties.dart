@@ -20,6 +20,7 @@ class DefaultProperties {
   static const Color blueColor = Color(0xFF4525f2);
   static const Color lightBlueColor = Color(0xFFe4e0fd);
   static const Color grayColor = Color(0xFF4c535b);
+  static const String serverIpAddress = "127.0.0.1";
 
   static const Color lightGrayColor = Color(0xFFb5b5b5);
   static DateFormat defaultDateFormat = DateFormat("dd.MM.yyyy");

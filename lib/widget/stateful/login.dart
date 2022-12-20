@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
+import 'package:opticianapp/model/user.dart';
 import 'package:opticianapp/widget/stateful/page_slider.dart';
 import 'package:http/http.dart' as http;
 
@@ -167,11 +169,16 @@ class LoginViewState extends State<LoginView> {
   }
 
   Future<bool> checkUserData(String userName, String password) async {
-    var url = Uri.https(DefaultProperties.serverIpAddress, '/checkUserData');
+    var body = jsonEncode(User(0, userName, password));
     try {
-      var response = await http.get(url);
-      if (response.statusCode == 200) {
-        if (response.body == "true") {
+      var response = await http.post(
+        Uri.https(DefaultProperties.serverIpAddress),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+      if (response.statusCode.toString().startsWith('2')) {
+        var json = jsonDecode(response.body) as Map<String, dynamic>;
+        if (json["userCheck"] as bool == true) {
           setState(() {
             errorTextUserData = null;
           });

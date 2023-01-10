@@ -47,6 +47,7 @@ class PageSliderState extends State<PageSlider> {
               },
               child: PageView(
                 controller: controller,
+                physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (page) {
                   setState(() {
                     pageChanged(page);

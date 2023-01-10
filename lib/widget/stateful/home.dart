@@ -11,13 +11,20 @@ class HomeView extends StatefulWidget {
   ValueChanged<bool> updateView;
   bool isAppointmentView;
 
-  HomeView(this.orders,this.appointments,this.updateView, this.isAppointmentView, {super.key});
+  HomeView(
+      this.orders, this.appointments, this.updateView, this.isAppointmentView,
+      {super.key});
 
   @override
   State<StatefulWidget> createState() => HomeViewState();
 }
 
 class HomeViewState extends State<HomeView> {
+  late List<bool> activePages = [true, false];
+  PageController controller = PageController(
+    initialPage: 0,
+  );
+
   void updateView(bool isAppointmentView) {
     setState(() {
       widget.isAppointmentView = isAppointmentView;
@@ -26,11 +33,44 @@ class HomeViewState extends State<HomeView> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.isAppointmentView
-          ? AppointmentView(widget.appointments, updateView)
-          : OrderView(widget.orders, updateView),
+      body: Column(
+        children: [
+          Expanded(
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
+              child: PageView(
+                controller: controller,
+                onPageChanged: (page) {
+                  setState(() {
+                    pageChanged(page);
+                  });
+                },
+                children: [
+                  AppointmentView(widget.appointments, updateView),
+                  OrderView(widget.orders, updateView)
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+
+  void pageChanged(int page) {
+    for (int i = 0; i < activePages.length; i++) {
+      activePages[i] = page == i;
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:opticianapp/data/json_writer.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/model/appointment.dart';
 import 'package:opticianapp/widget/stateful/appointment.dart';
@@ -137,7 +138,8 @@ class AppointmentViewState extends State<AppointmentView> {
                             bottom: index == widget.appointments.length - 1
                                 ? DefaultProperties.doubleMorePadding
                                 : 0),
-                        child: AppointmentItem(widget.appointments[index]),
+                        child: AppointmentItem(
+                            widget.appointments, widget.appointments[index]),
                       );
                     },
                   ),
@@ -157,6 +159,9 @@ class AppointmentViewState extends State<AppointmentView> {
 
   void onAddAppointment() {
     TextEditingController date = TextEditingController();
+    String dateString = "";
+    String title = "";
+    Map<String, dynamic> jsonMap = new Map();
     date.text = DefaultProperties.defaultDateFormat.format(DateTime.now());
     showDialog(
         context: context,
@@ -174,8 +179,10 @@ class AppointmentViewState extends State<AppointmentView> {
                         labelText: 'Titel',
                         icon: Icon(Icons.title),
                       ),
+                      onChanged: (value) => title = value,
                     ),
                     TextField(
+                      onChanged: (value) => dateString = value.toString(),
                       controller: date,
                       decoration: InputDecoration(
                         labelText: 'Datum',
@@ -213,7 +220,17 @@ class AppointmentViewState extends State<AppointmentView> {
                   child: Text("Erstellen"),
                   onPressed: () {
                     setState(() {
-                      // TODO create
+                      createReminder(title, dateString).then((value) => {
+                            setState(() {
+                              widget.appointments.add(new Appointment(
+                                  value?['ID'],
+                                  value?['customerID'],
+                                  value?['type'],
+                                  value?['title'] ?? "",
+                                  DateTime.parse(value?['due']),
+                                  DateTime.parse(value?['timestamp'])));
+                            })
+                          });
                     });
 
                     Navigator.pop(context);
@@ -222,12 +239,26 @@ class AppointmentViewState extends State<AppointmentView> {
           );
         });
   }
+
+  static Future<Map<String, dynamic>?> createReminder(
+      String title, String dateString) async {
+    Map<String, dynamic> jsonMap = {'title': title, 'date': dateString};
+
+    try {
+      Map<String, dynamic> responseJson =
+          await JsonWriter.createReminderHttps(jsonMap);
+      return responseJson;
+    } catch (e) {
+      print('Failed to send JSON data: $e');
+    }
+  }
 }
 
 class AppointmentItem extends StatefulWidget {
+  List<Appointment> appointments;
   Appointment item;
 
-  AppointmentItem(this.item, {super.key});
+  AppointmentItem(this.appointments, this.item, {super.key});
 
   @override
   State<StatefulWidget> createState() => AppointmentItemState();
@@ -407,18 +438,65 @@ class AppointmentItemState extends State<AppointmentItem> {
   }
 
   void onMenuPress(BuildContext context, value, AppointmentItem item) {
-    TextEditingController date = TextEditingController();
-    date.text = DefaultProperties.defaultDateFormat.format(item.item.due);
     if (value == 1) {
-      // TODO remove
+      removeReminder(item);
       return;
     }
+    editReminder(item);
+  }
+
+  void removeReminder(AppointmentItem item) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             scrollable: true,
-            title: Text('Erinnerung bearbeiten'),
+            title: Text('Erinnerung löschen', textAlign: TextAlign.center),
+            content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Wollen Sie diese Erinnerung wirklich löschen?",
+                  textAlign: TextAlign.center,
+                )),
+            actions: [
+              TextButton(
+                  child: Text("Nein"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              TextButton(
+                  child: Text("Ja"),
+                  onPressed: () {
+                    setState(() {
+                      JsonWriter.removeReminder(item.item.id).then((value) => {
+                            if (value)
+                              {
+                                setState(() {
+                                  widget.appointments.removeWhere(
+                                      (element) => element.id == item.item.id);
+                                })
+                              }
+                          });
+
+                      Navigator.pop(context);
+                    });
+                  }),
+            ],
+          );
+        });
+  }
+
+  void editReminder(AppointmentItem item) {
+    TextEditingController date = TextEditingController();
+    date.text = DefaultProperties.defaultDateFormat.format(item.item.due);
+    String title = "";
+    String dateString = "";
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            scrollable: true,
+            title: Text('Erinnerung bearbeiten', textAlign: TextAlign.center),
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
@@ -430,6 +508,7 @@ class AppointmentItemState extends State<AppointmentItem> {
                         icon: Icon(Icons.title),
                       ),
                       controller: TextEditingController(text: item.item.text),
+                      onChanged: (value) => {title = value},
                     ),
                     TextField(
                       controller: date,
@@ -454,6 +533,7 @@ class AppointmentItemState extends State<AppointmentItem> {
                           });
                         }
                       },
+                      onChanged: (value) => {dateString = value},
                     ),
                   ],
                 ),
@@ -469,7 +549,17 @@ class AppointmentItemState extends State<AppointmentItem> {
                   child: Text("Bearbeiten"),
                   onPressed: () {
                     setState(() {
-                      // TODO edit
+                      editReminderJson(title, dateString).then((value) => {
+                            setState(() {
+                              widget.appointments.add(new Appointment(
+                                  value?['ID'],
+                                  value?['customerID'],
+                                  value?['type'],
+                                  value?['title'] ?? "",
+                                  DateTime.parse(value?['due']),
+                                  DateTime.parse(value?['timestamp'])));
+                            })
+                          });
                     });
 
                     Navigator.pop(context);
@@ -477,5 +567,18 @@ class AppointmentItemState extends State<AppointmentItem> {
             ],
           );
         });
+  }
+
+  Future<Map<String, dynamic>?> editReminderJson(
+      String title, String dateString) async {
+    Map<String, dynamic> jsonMap = {'title': title, 'date': dateString};
+
+    try {
+      Map<String, dynamic> responseJson =
+          await JsonWriter.createReminderHttps(jsonMap);
+      return responseJson;
+    } catch (e) {
+      print('Failed to send JSON data: $e');
+    }
   }
 }

@@ -1,14 +1,13 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/model/user.dart';
 import 'package:opticianapp/widget/stateful/page_slider.dart';
-import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -117,7 +116,7 @@ class LoginViewState extends State<LoginView> {
           ),
           child: Text("Login",
               style: TextStyle(fontSize: DefaultProperties.fontSize1)),
-          onPressed: () => {onLogin()},
+          onPressed: () => {redirectToApp()}, // TODO change method to onLogin()
         ),
       ),
     );
@@ -153,17 +152,22 @@ class LoginViewState extends State<LoginView> {
                     if (value)
                       {
                         JsonReader.initData().then((value) => {
-                              if (value)
-                                {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PageSlider(true)),
-                                  ),
-                                }
+                              if (value) {redirectToApp()}
                             }),
                       }
                   }),
+            }
+        });
+  }
+
+  void redirectToApp() {
+    JsonReader.initData().then((value) => {
+          if (value)
+            {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => PageSlider(true)),
+              )
             }
         });
   }

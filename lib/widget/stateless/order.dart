@@ -6,9 +6,9 @@ import 'package:opticianapp/model/order.dart';
 
 class OrderView extends StatelessWidget {
   List<Order> orders;
-  ValueChanged<bool> updateView;
+  PageController controller;
 
-  OrderView(this.orders, this.updateView);
+  OrderView(this.orders, this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class OrderView extends StatelessWidget {
         IconButton(
           tooltip: "Termine",
             color: DefaultProperties.grayColor,
-            onPressed: () => onPress(),
+            onPressed: () => onAppointmentsPress(),
             icon: Icon(Icons.calendar_today_outlined,
                 size: DefaultProperties.buttonSize)),
         Spacer(),
@@ -110,8 +110,8 @@ class OrderView extends StatelessWidget {
     );
   }
 
-  void onPress() {
-    updateView(true);
+  void onAppointmentsPress() {
+    controller.jumpToPage(0);
   }
 }
 

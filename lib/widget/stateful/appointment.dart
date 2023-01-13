@@ -10,9 +10,9 @@ import 'package:opticianapp/widget/stateful/appointment.dart';
 
 class AppointmentView extends StatefulWidget {
   List<Appointment> appointments;
-  ValueChanged<bool> updateView;
+  PageController controller;
 
-  AppointmentView(this.appointments, this.updateView, {super.key});
+  AppointmentView(this.appointments, this.controller, {super.key});
 
   @override
   State<StatefulWidget> createState() => AppointmentViewState();
@@ -58,7 +58,7 @@ class AppointmentViewState extends State<AppointmentView> {
           IconButton(
               tooltip: "Aufträge",
               color: DefaultProperties.grayColor,
-              onPressed: () => onPress(),
+              onPressed: () => onOrdersPress(),
               icon: Icon(
                 Icons.local_shipping_outlined,
                 size: DefaultProperties.buttonSize,
@@ -153,15 +153,13 @@ class AppointmentViewState extends State<AppointmentView> {
     );
   }
 
-  void onPress() {
-    widget.updateView(false);
+  void onOrdersPress() {
+    widget.controller.jumpToPage(1);
   }
 
   void onAddAppointment() {
     TextEditingController date = TextEditingController();
-    String dateString = "";
     String title = "";
-    Map<String, dynamic> jsonMap = new Map();
     date.text = DefaultProperties.defaultDateFormat.format(DateTime.now());
     showDialog(
         context: context,
@@ -182,7 +180,6 @@ class AppointmentViewState extends State<AppointmentView> {
                       onChanged: (value) => title = value,
                     ),
                     TextField(
-                      onChanged: (value) => dateString = value.toString(),
                       controller: date,
                       decoration: InputDecoration(
                         labelText: 'Datum',
@@ -220,20 +217,20 @@ class AppointmentViewState extends State<AppointmentView> {
                   child: Text("Erstellen"),
                   onPressed: () {
                     setState(() {
-                      createReminder(title, dateString).then((value) => {
+                      createReminder(title, date.text).then((value) => {
                             setState(() {
                               widget.appointments.add(new Appointment(
                                   value?['ID'],
                                   value?['customerID'],
                                   value?['type'],
-                                  value?['title'] ?? "",
+                                  value?['text'] ?? "",
                                   DateTime.parse(value?['due']),
                                   DateTime.parse(value?['timestamp'])));
                             })
                           });
-                    });
 
-                    Navigator.pop(context);
+                      Navigator.pop(context);
+                    });
                   }),
             ],
           );
@@ -241,8 +238,9 @@ class AppointmentViewState extends State<AppointmentView> {
   }
 
   static Future<Map<String, dynamic>?> createReminder(
-      String title, String dateString) async {
-    Map<String, dynamic> jsonMap = {'title': title, 'date': dateString};
+      String text, String due) async {
+    due = DateFormat("yyyy-MM-dd").format(DateFormat("dd.MM.yyyy").parse(due));
+    Map<String, dynamic> jsonMap = {'text': text, 'due': due};
 
     try {
       Map<String, dynamic> responseJson =
@@ -369,7 +367,9 @@ class AppointmentItemState extends State<AppointmentItem> {
                                   <PopupMenuEntry>[
                                 const PopupMenuItem(
                                   value: 0,
-                                  child: Text('Bearbeiten'),
+                                  child: Text(
+                                    'Bearbeiten',
+                                  ),
                                 ),
                                 const PopupMenuItem(
                                   value: 1,
@@ -439,13 +439,13 @@ class AppointmentItemState extends State<AppointmentItem> {
 
   void onMenuPress(BuildContext context, value, AppointmentItem item) {
     if (value == 1) {
-      removeReminder(item);
+      deleteReminder(item);
       return;
     }
     editReminder(item);
   }
 
-  void removeReminder(AppointmentItem item) {
+  void deleteReminder(AppointmentItem item) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -468,7 +468,7 @@ class AppointmentItemState extends State<AppointmentItem> {
                   child: Text("Ja"),
                   onPressed: () {
                     setState(() {
-                      JsonWriter.removeReminder(item.item.id).then((value) => {
+                      JsonWriter.deleteReminder(item.item.id).then((value) => {
                             if (value)
                               {
                                 setState(() {
@@ -489,8 +489,8 @@ class AppointmentItemState extends State<AppointmentItem> {
   void editReminder(AppointmentItem item) {
     TextEditingController date = TextEditingController();
     date.text = DefaultProperties.defaultDateFormat.format(item.item.due);
-    String title = "";
-    String dateString = "";
+    int id = item.item.id;
+    String text = item.item.text;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -508,7 +508,7 @@ class AppointmentItemState extends State<AppointmentItem> {
                         icon: Icon(Icons.title),
                       ),
                       controller: TextEditingController(text: item.item.text),
-                      onChanged: (value) => {title = value},
+                      onChanged: (value) => {text = value},
                     ),
                     TextField(
                       controller: date,
@@ -533,7 +533,6 @@ class AppointmentItemState extends State<AppointmentItem> {
                           });
                         }
                       },
-                      onChanged: (value) => {dateString = value},
                     ),
                   ],
                 ),
@@ -549,20 +548,16 @@ class AppointmentItemState extends State<AppointmentItem> {
                   child: Text("Bearbeiten"),
                   onPressed: () {
                     setState(() {
-                      editReminderJson(title, dateString).then((value) => {
+                      editReminderJson(id, text, date.text).then((value) => {
                             setState(() {
-                              widget.appointments.add(new Appointment(
-                                  value?['ID'],
-                                  value?['customerID'],
-                                  value?['type'],
-                                  value?['title'] ?? "",
-                                  DateTime.parse(value?['due']),
-                                  DateTime.parse(value?['timestamp'])));
+                              var appointment = widget.appointments.singleWhere(
+                                  (element) => element.id == value?['id']);
+                              appointment.text = value?['text'];
+                              appointment.due = DateTime.parse(value?['due']);
                             })
                           });
+                      Navigator.pop(context);
                     });
-
-                    Navigator.pop(context);
                   }),
             ],
           );
@@ -570,12 +565,13 @@ class AppointmentItemState extends State<AppointmentItem> {
   }
 
   Future<Map<String, dynamic>?> editReminderJson(
-      String title, String dateString) async {
-    Map<String, dynamic> jsonMap = {'title': title, 'date': dateString};
+      int id, String text, String due) async {
+    due = DateFormat("yyyy-MM-dd").format(DateFormat("dd.MM.yyyy").parse(due));
+    Map<String, dynamic> jsonMap = {'ID': id, 'text': text, 'due': due};
 
     try {
       Map<String, dynamic> responseJson =
-          await JsonWriter.createReminderHttps(jsonMap);
+          await JsonWriter.editReminderHttps(jsonMap);
       return responseJson;
     } catch (e) {
       print('Failed to send JSON data: $e');

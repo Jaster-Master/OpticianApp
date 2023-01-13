@@ -57,8 +57,8 @@ class HomeViewState extends State<HomeView> {
                   });
                 },
                 children: [
-                  AppointmentView(widget.appointments, updateView),
-                  OrderView(widget.orders, updateView)
+                  AppointmentView(widget.appointments, controller),
+                  OrderView(widget.orders, controller)
                 ],
               ),
             ),

@@ -6,7 +6,7 @@ class JsonWriter {
   static Future<Map<String, dynamic>> createReminderHttps(
       Map<String, dynamic> jsonMap) async {
     // Encode jsonMap as a JSON string
-    var jsonString = json.encode(jsonMap);
+    var jsonString = jsonEncode(jsonMap);
 
     // Create a new HTTP client
     var client = http.Client();
@@ -32,7 +32,7 @@ class JsonWriter {
     }
   }
 
-  static Future<bool> removeReminder(int id) async {
+  static Future<bool> deleteReminder(int id) async {
     // Create a new HTTP client
     var client = http.Client();
 

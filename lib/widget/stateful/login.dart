@@ -45,6 +45,7 @@ class LoginViewState extends State<LoginView> {
         onChanged: (value) {
           userName = value;
         },
+        initialValue: "Gobl",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Bitte geben Sie einen Benutzernamen ein!";
@@ -68,6 +69,7 @@ class LoginViewState extends State<LoginView> {
         onChanged: (value) {
           password = value;
         },
+        initialValue: "abcdefggfedcba",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Bitte geben Sie ein Passwort ein!";
@@ -116,7 +118,7 @@ class LoginViewState extends State<LoginView> {
           ),
           child: Text("Login",
               style: TextStyle(fontSize: DefaultProperties.fontSize1)),
-          onPressed: () => {redirectToApp()}, // TODO change method to onLogin()
+          onPressed: () => {onLogin()},
         ),
       ),
     );
@@ -161,22 +163,19 @@ class LoginViewState extends State<LoginView> {
   }
 
   void redirectToApp() {
-    JsonReader.initData().then((value) => {
-          if (value)
-            {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => PageSlider(true)),
-              )
-            }
-        });
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PageSlider(true)),
+    );
   }
 
   Future<bool> checkUserData(String userName, String password) async {
     var body = jsonEncode(User(0, userName, password));
+
+    var client = http.Client();
     try {
-      var response = await http.post(
-        Uri.https(DefaultProperties.serverIpAddress),
+      var response = await client.post(
+        Uri.parse("${DefaultProperties.serverIpAddress}/login"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
       );

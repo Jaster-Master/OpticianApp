@@ -20,8 +20,8 @@ class LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   String? errorText = null;
   String? errorTextUserData = null;
-  String userName = "";
-  String password = "";
+  String userName = "Gobl";
+  String password = "abcdefggfedcba";
 
   @override
   Widget build(BuildContext context) {

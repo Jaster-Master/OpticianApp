@@ -14,7 +14,7 @@ class JsonWriter {
     try {
       // Send a POST request to the server with the JSON payload
       var response = await client.post(
-          Uri.parse(DefaultProperties.serverIpAddress + "/reminder/create"),
+          Uri.parse("${DefaultProperties.serverIpAddress}/reminder/create"),
           body: jsonString,
           headers: {'Content-Type': 'application/json'});
 
@@ -43,7 +43,7 @@ class JsonWriter {
     try {
       // Send a POST request to the server with the JSON payload
       var response = await client.put(
-          Uri.parse(DefaultProperties.serverIpAddress + "/reminder/edit"),
+          Uri.parse("${DefaultProperties.serverIpAddress}/reminder/edit"),
           body: jsonString,
           headers: {'Content-Type': 'application/json'});
 
@@ -68,8 +68,7 @@ class JsonWriter {
     try {
       // Send a POST request to the server with the JSON payload
       var response = await client.delete(
-          Uri.parse(DefaultProperties.serverIpAddress + "/reminder/delete"),
-          body: id,
+          Uri.parse("${DefaultProperties.serverIpAddress}/reminder/delete/$id"),
           headers: {'Content-Type': 'application/json'});
 
       // Check that the server returned a 200 OK status code

@@ -5,7 +5,7 @@ import 'package:opticianapp/widget/stateful/login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // NotificationService().initializeService();
+  NotificationService().initializeService();
   runApp(const OpticianApp());
 }
 

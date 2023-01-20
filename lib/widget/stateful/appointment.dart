@@ -19,6 +19,8 @@ class AppointmentView extends StatefulWidget {
 }
 
 class AppointmentViewState extends State<AppointmentView> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     var tabText = Text("Meine Termine",
@@ -138,8 +140,8 @@ class AppointmentViewState extends State<AppointmentView> {
                             bottom: index == widget.appointments.length - 1
                                 ? DefaultProperties.doubleMorePadding
                                 : 0),
-                        child: AppointmentItem(
-                            widget.appointments, widget.appointments[index]),
+                        child: AppointmentItem(this, widget.appointments,
+                            widget.appointments[index]),
                       );
                     },
                   ),
@@ -161,6 +163,7 @@ class AppointmentViewState extends State<AppointmentView> {
     TextEditingController date = TextEditingController();
     String title = "";
     date.text = DefaultProperties.defaultDateFormat.format(DateTime.now());
+    var currentState = this;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -170,22 +173,37 @@ class AppointmentViewState extends State<AppointmentView> {
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    TextField(
+                    TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Titel',
-                        icon: Icon(Icons.title),
-                      ),
+                          labelText: 'Titel',
+                          icon: Icon(Icons.title),
+                          errorMaxLines: 3,
+                          errorStyle: TextStyle(color: Colors.red)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Bitte geben Sie einen Namen ein!";
+                        }
+                        return null;
+                      },
                       onChanged: (value) => title = value,
                     ),
-                    TextField(
+                    TextFormField(
                       controller: date,
-                      decoration: InputDecoration(
-                        labelText: 'Datum',
-                        icon: Icon(Icons.calendar_today),
-                      ),
+                      decoration: const InputDecoration(
+                          labelText: 'Datum',
+                          icon: Icon(Icons.calendar_today),
+                          errorMaxLines: 3,
+                          errorStyle: TextStyle(color: Colors.red)),
                       readOnly: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Bitte geben Sie ein Datum ein!";
+                        }
+                        return null;
+                      },
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                             context: context,
@@ -203,6 +221,9 @@ class AppointmentViewState extends State<AppointmentView> {
                         }
                       },
                     ),
+                    Row(
+                      children: [],
+                    )
                   ],
                 ),
               ),
@@ -216,21 +237,22 @@ class AppointmentViewState extends State<AppointmentView> {
               TextButton(
                   child: Text("Erstellen"),
                   onPressed: () {
-                    setState(() {
-                      createReminder(title, date.text).then((value) => {
-                            setState(() {
-                              widget.appointments.add(new Appointment(
-                                  value?['ID'],
-                                  value?['customerID'],
-                                  value?['type'],
-                                  value?['text'] ?? "",
-                                  DateTime.parse(value?['due']),
-                                  DateTime.parse(value?['timestamp'])));
-                            })
-                          });
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    createReminder(title, date.text).then((value) => {
+                          currentState.setState(() {
+                            widget.appointments.add(new Appointment(
+                                value?['id'],
+                                value?['customerID'],
+                                value?['type'],
+                                value?['text'] ?? "",
+                                DateTime.parse(value?['due']),
+                                DateTime.parse(value?['timestamp'])));
+                          })
+                        });
 
-                      Navigator.pop(context);
-                    });
+                    Navigator.pop(context);
                   }),
             ],
           );
@@ -253,16 +275,19 @@ class AppointmentViewState extends State<AppointmentView> {
 }
 
 class AppointmentItem extends StatefulWidget {
+  AppointmentViewState parentState;
   List<Appointment> appointments;
   Appointment item;
 
-  AppointmentItem(this.appointments, this.item, {super.key});
+  AppointmentItem(this.parentState, this.appointments, this.item, {super.key});
 
   @override
   State<StatefulWidget> createState() => AppointmentItemState();
 }
 
 class AppointmentItemState extends State<AppointmentItem> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     int days = widget.item.due.difference(DateTime.now()).inDays;
@@ -467,19 +492,17 @@ class AppointmentItemState extends State<AppointmentItem> {
               TextButton(
                   child: Text("Ja"),
                   onPressed: () {
-                    setState(() {
-                      JsonWriter.deleteReminder(item.item.id).then((value) => {
-                            if (value)
-                              {
-                                setState(() {
-                                  widget.appointments.removeWhere(
-                                      (element) => element.id == item.item.id);
-                                })
-                              }
-                          });
+                    JsonWriter.deleteReminder(item.item.id).then((value) => {
+                          if (value)
+                            {
+                              widget.parentState.setState(() {
+                                widget.appointments.removeWhere(
+                                    (element) => element.id == item.item.id);
+                              })
+                            }
+                        });
 
-                      Navigator.pop(context);
-                    });
+                    Navigator.pop(context);
                   }),
             ],
           );
@@ -500,22 +523,37 @@ class AppointmentItemState extends State<AppointmentItem> {
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    TextField(
+                    TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Titel',
-                        icon: Icon(Icons.title),
-                      ),
+                          labelText: 'Titel',
+                          icon: Icon(Icons.title),
+                          errorMaxLines: 3,
+                          errorStyle: TextStyle(color: Colors.red)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Bitte geben Sie einen Namen ein!";
+                        }
+                        return null;
+                      },
                       controller: TextEditingController(text: item.item.text),
                       onChanged: (value) => {text = value},
                     ),
-                    TextField(
+                    TextFormField(
                       controller: date,
                       decoration: InputDecoration(
-                        labelText: 'Datum',
-                        icon: Icon(Icons.calendar_today),
-                      ),
+                          labelText: 'Datum',
+                          icon: Icon(Icons.calendar_today),
+                          errorMaxLines: 3,
+                          errorStyle: TextStyle(color: Colors.red)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Bitte geben Sie einen Namen ein!";
+                        }
+                        return null;
+                      },
                       readOnly: true,
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
@@ -547,17 +585,17 @@ class AppointmentItemState extends State<AppointmentItem> {
               TextButton(
                   child: Text("Bearbeiten"),
                   onPressed: () {
-                    setState(() {
-                      editReminderJson(id, text, date.text).then((value) => {
-                            setState(() {
-                              var appointment = widget.appointments.singleWhere(
-                                  (element) => element.id == value?['id']);
-                              appointment.text = value?['text'];
-                              appointment.due = DateTime.parse(value?['due']);
-                            })
-                          });
-                      Navigator.pop(context);
-                    });
+                    if (!_formKey.currentState!.validate()) return;
+
+                    editReminderJson(id, text, date.text).then((value) => {
+                          setState(() {
+                            var appointment = widget.appointments.singleWhere(
+                                (element) => element.id == value?['id']);
+                            appointment.text = value?['text'];
+                            appointment.due = DateTime.parse(value?['due']);
+                          })
+                        });
+                    Navigator.pop(context);
                   }),
             ],
           );

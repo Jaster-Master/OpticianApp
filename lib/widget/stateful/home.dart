@@ -25,11 +25,17 @@ class HomeViewState extends State<HomeView> {
     initialPage: 0,
   );
 
-  void updateView(bool isAppointmentView) {
+  void updateView(int page) {
     setState(() {
-      widget.isAppointmentView = isAppointmentView;
-      widget.updateView(isAppointmentView);
+      widget.isAppointmentView = page == 0;
+      widget.updateView(widget.isAppointmentView);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = PageController(initialPage: widget.isAppointmentView ? 0 : 1);
   }
 
   @override
@@ -40,6 +46,13 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    controller.addListener(() {
+      if (controller.page == 0 || controller.page == 1) {
+        if (controller.page != null) {
+          updateView(controller.page!.toInt());
+        }
+      }
+    });
     return Scaffold(
       body: Column(
         children: [

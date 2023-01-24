@@ -17,7 +17,7 @@ class OrderView extends StatelessWidget {
     var tabs = Row(
       children: [
         IconButton(
-          tooltip: "Termine",
+            tooltip: "Termine",
             color: DefaultProperties.grayColor,
             onPressed: () => onAppointmentsPress(),
             icon: Icon(Icons.calendar_today_outlined,
@@ -92,7 +92,7 @@ class OrderView extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(
-                              bottom: index == orders.length-1
+                              bottom: index == orders.length - 1
                                   ? DefaultProperties.doubleMorePadding
                                   : 0),
                           child: OrderItem(orders[index]),

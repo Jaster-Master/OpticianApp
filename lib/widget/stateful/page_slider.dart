@@ -10,7 +10,7 @@ import 'package:opticianapp/widget/stateless/eyeglass_prescription.dart';
 import 'package:opticianapp/widget/stateless/information.dart';
 
 class PageSlider extends StatefulWidget {
-  bool isAppointmentView;
+  bool isAppointmentView = true;
 
   PageSlider(this.isAppointmentView, {super.key});
 
@@ -54,9 +54,9 @@ class PageSliderState extends State<PageSlider> {
                   });
                 },
                 children: [
-                  HomeView(JsonReader.orders, JsonReader.appointments, updateView, widget.isAppointmentView),
-                  EyeglassPrescriptionView(
-                      JsonReader.eyeglassPrescriptions),
+                  HomeView(JsonReader.orders, JsonReader.appointments,
+                      updateView, widget.isAppointmentView),
+                  EyeglassPrescriptionView(JsonReader.eyeglassPrescriptions),
                   PartnerListView(),
                   InformationView(),
                 ],

@@ -22,6 +22,7 @@ class LoginViewState extends State<LoginView> {
   String? errorTextUserData = null;
   String userName = "Gobl";
   String password = "abcdefggfedcba";
+  bool isLoginButtonPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class LoginViewState extends State<LoginView> {
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius:
-                  BorderRadius.circular(DefaultProperties.defaultRounded),
+              BorderRadius.circular(DefaultProperties.defaultRounded),
             ),
             labelText: 'Benutzernamen eingeben',
             errorMaxLines: 3,
@@ -61,7 +62,7 @@ class LoginViewState extends State<LoginView> {
         decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius:
-                  BorderRadius.circular(DefaultProperties.defaultRounded),
+              BorderRadius.circular(DefaultProperties.defaultRounded),
             ),
             labelText: 'Passwort eingeben',
             errorMaxLines: 3,
@@ -114,7 +115,7 @@ class LoginViewState extends State<LoginView> {
           style: ButtonStyle(
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius:
-                    BorderRadius.circular(DefaultProperties.defaultRounded))),
+                BorderRadius.circular(DefaultProperties.defaultRounded))),
           ),
           child: Text("Login",
               style: TextStyle(fontSize: DefaultProperties.fontSize1)),
@@ -146,20 +147,24 @@ class LoginViewState extends State<LoginView> {
   }
 
   void onLogin() {
-    if (!_formKey.currentState!.validate()) return;
-    setHasNetworkConnection().then((value) => {
-          if (value)
-            {
-              checkUserData(userName, password).then((value) => {
-                    if (value)
-                      {
-                        JsonReader.initData().then((value) => {
-                              if (value) {redirectToApp()}
-                            }),
-                      }
-                  }),
-            }
+    if (!_formKey.currentState!.validate() || isLoginButtonPressed) return;
+    isLoginButtonPressed = true;
+    setHasNetworkConnection().then((value) {
+      isLoginButtonPressed = value;
+      if (value) {
+        checkUserData(userName, password).then((value) {
+          isLoginButtonPressed = value;
+          if (value) {
+            JsonReader.initData().then((value) {
+              isLoginButtonPressed = value;
+              if (value) {
+                redirectToApp();
+              }
+            });
+          }
         });
+      }
+    });
   }
 
   void redirectToApp() {
@@ -174,11 +179,13 @@ class LoginViewState extends State<LoginView> {
 
     var client = http.Client();
     try {
-      var response = await client.post(
+      var response = await client
+          .post(
         Uri.parse("${DefaultProperties.serverIpAddress}/login"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body),
-      );
+      )
+          .timeout(const Duration(seconds: 1));
       if (response.statusCode.toString().startsWith('2')) {
         var json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json["userCheck"] as bool == true) {
@@ -189,20 +196,20 @@ class LoginViewState extends State<LoginView> {
         }
         setState(() {
           errorTextUserData =
-              "Diese Benutzerdaten sind ungültig oder existieren nicht!";
+          "Diese Benutzerdaten sind ungültig oder existieren nicht!";
         });
         return false;
       } else {
         setState(() {
           errorTextUserData =
-              "Es ist ein Fehler beim Verbinden zum Server aufgetreten!";
+          "Es ist ein Fehler beim Verbinden zum Server aufgetreten!";
         });
         return false;
       }
     } catch (e) {
       setState(() {
         errorTextUserData =
-            "Es ist ein Fehler beim Verbinden zum Server aufgetreten!";
+        "Es ist ein Fehler beim Verbinden zum Server aufgetreten!";
       });
       return false;
     }

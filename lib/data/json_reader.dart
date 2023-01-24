@@ -8,14 +8,15 @@ import 'package:opticianapp/model/order.dart';
 import '../default_properties.dart';
 
 class JsonReader {
-  static List<dynamic>? jsonEyeglassPrescriptions;
-  static List<dynamic>? jsonAppointments;
-  static List<dynamic>? jsonOrders;
+  static List<dynamic> jsonEyeglassPrescriptions = [];
+  static List<dynamic> jsonAppointments = [];
+  static List<dynamic> jsonOrders = [];
   static List<Appointment> appointments = [];
   static List<Order> orders = [];
   static List<EyeglassPrescription> eyeglassPrescriptions = [];
 
   static Future<bool> initData() async {
+    resetData();
     var client = http.Client();
     try {
       var response = await client.get(Uri.parse(
@@ -75,5 +76,14 @@ class JsonReader {
         appointments.add(Appointment.fromJson(element));
       }
     });
+  }
+
+  static void resetData() {
+    jsonEyeglassPrescriptions.clear();
+    jsonAppointments.clear();
+    jsonOrders.clear();
+    eyeglassPrescriptions.clear();
+    appointments.clear();
+    orders.clear();
   }
 }

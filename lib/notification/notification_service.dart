@@ -29,11 +29,17 @@ class NotificationService {
     }
   }
 
-  Future<bool> onIosBackground(ServiceInstance service) async {
+  static Future<bool> onIosBackground(ServiceInstance service) async {
+    checkDues();
     return true;
   }
 
-  static Future<void> onStart(ServiceInstance service) async {
+  static Future<bool> onStart(ServiceInstance service) async {
+    checkDues();
+    return true;
+  }
+
+  static Future<void> checkDues() async {
     Timer.periodic(const Duration(hours: 1), (timer) {
       getAppointmentDues().then((value) {
         value?.forEach((element) {

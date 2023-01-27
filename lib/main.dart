@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:opticianapp/model/user.dart';
 import 'package:opticianapp/notification/notification_service.dart';
 import 'package:opticianapp/widget/stateful/login.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService().initializeService();
-  runApp(const OpticianApp());
+  runApp(OpticianApp());
 }
 
 class OpticianApp extends StatelessWidget {
-  const OpticianApp({super.key});
+  static User? user;
+
+  OpticianApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +34,8 @@ class OpticianApp extends StatelessWidget {
           900: const Color(0xFF4525f2)
         }),
       ),
-      home: Scaffold(
-        body: LoginView(),
+      home: SafeArea(
+        child: LoginView(),
       ),
     );
   }

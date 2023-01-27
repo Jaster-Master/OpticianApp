@@ -5,6 +5,6 @@ class FeedbackView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Feedback");
+    return SafeArea(child: Text("Feedback"));
   }
 }

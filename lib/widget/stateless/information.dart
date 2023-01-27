@@ -37,8 +37,7 @@ class InformationView extends StatelessWidget {
         ),
       ],
     );
-    return Padding(
-      padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+    return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(DefaultProperties.morePadding),
         child:

@@ -5,6 +5,6 @@ class AboutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("About");
+    return SafeArea(child: Text("About"));
   }
 }

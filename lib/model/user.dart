@@ -2,14 +2,24 @@ class User {
   int id;
   String username;
   String password;
+  int favouriteOpticianId;
+  Map<int, int> favouriteOpticianLocations;
 
-  User(this.id, this.username, this.password);
+  User(this.id, this.username, this.password, this.favouriteOpticianId,
+      this.favouriteOpticianLocations);
 
   User.fromJson(Map<String, dynamic> json)
-      : id = json['ID'] as int,
+      : id = json['id'],
         username = json['username'],
-        password = json['password'];
+        password = json['password'],
+        favouriteOpticianId = json['favouriteOpticianId'],
+        favouriteOpticianLocations = json['favouriteOpticianLocations'];
 
-  Map<String, dynamic> toJson() =>
-      {'ID': id, 'username': username, 'password': password};
+  Map<String, dynamic> toJson() => {
+        'ID': id,
+        'username': username,
+        'password': password,
+        'favouriteOpticianId': favouriteOpticianId,
+        'favouriteOpticianLocations': favouriteOpticianLocations
+      };
 }

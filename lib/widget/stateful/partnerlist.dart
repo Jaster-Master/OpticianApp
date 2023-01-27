@@ -1,24 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/default_properties.dart';
+import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/location.dart';
 import 'package:opticianapp/model/optician.dart';
 import 'package:opticianapp/widget/stateful/partnerlist.dart';
 import 'package:collection/collection.dart';
 import 'package:opticianapp/widget/stateful/partnerlist_details.dart';
 
-var location = Location("country", "zipCode", "city", "street", "streetNumber");
+var location =
+    Location(0, "country", "zipCode", "city", "street", "streetNumber");
 var location2 =
-    Location("country2", "zipCode2", "city2", "street2", "streetNumber2");
+    Location(0, "country2", "zipCode2", "city2", "street2", "streetNumber2");
 
 class PartnerListView extends StatefulWidget {
   List<Optician> partner = [
-    Optician("Alex", "Test", [location, location2], location, "null", "null",
-        "null", [DateTime.now().add(Duration(days: 1)), DateTime.now()], false),
-    Optician("Nom", "Test", [location, location2], location, "null", "null",
-        "null", [DateTime.now().add(Duration(days: 1)), DateTime.now()], false)
+    Optician(0, "Alex", "Test", [location, location2], "null", "null",
+        "null", [DateTime.now().add(Duration(days: 1)), DateTime.now()]),
+    Optician(1, "Nom", "Test", [location, location2], "null", "null",
+        "null", [DateTime.now().add(Duration(days: 1)), DateTime.now()])
   ];
-  Map<String, List<Optician>> listViewValues = {};
+  Map<String, List<Optician>> partners = {};
+  Map<String, List<Optician>> searchedPartners = {};
 
   PartnerListView({super.key}) {
     List<String> alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -29,8 +32,9 @@ class PartnerListView extends StatefulWidget {
           currentPartner.add(value);
         }
       }
-      listViewValues[letter] = currentPartner;
+      partners[letter] = currentPartner;
     }
+    searchedPartners = {...partners};
   }
 
   @override
@@ -75,14 +79,15 @@ class PartnerListViewState extends State<PartnerListView> {
           ),
           labelText: 'Suchen',
         ),
+        onChanged: (value) => updateNewSearch(value),
       ),
     );
 
-    var favouritePartner =
-        widget.partner.where((element) => element.isFavourite).firstOrNull;
+    var favouritePartner = widget.partner
+        .where((element) => element.id == OpticianApp.user?.favouriteOpticianId)
+        .firstOrNull;
 
-    return Padding(
-      padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+    return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(DefaultProperties.morePadding),
         child: Column(
@@ -112,18 +117,18 @@ class PartnerListViewState extends State<PartnerListView> {
                       return true;
                     },
                     child: ListView.builder(
-                      itemCount: widget.listViewValues.keys.length,
+                      itemCount: widget.searchedPartners.keys.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(
-                              bottom:
-                                  index == widget.listViewValues.keys.length - 1
-                                      ? DefaultProperties.tripleMorePadding
-                                      : 0),
+                              bottom: index ==
+                                      widget.searchedPartners.keys.length - 1
+                                  ? DefaultProperties.tripleMorePadding
+                                  : 0),
                           child: PartnerListItem(
                               this,
                               openDetailsListView,
-                              widget.listViewValues,
+                              widget.searchedPartners,
                               String.fromCharCode(index + 65)),
                         );
                       },
@@ -146,16 +151,37 @@ class PartnerListViewState extends State<PartnerListView> {
       ),
     );
   }
+
+  void updateNewSearch(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        widget.searchedPartners = {...widget.partners};
+        return;
+      }
+      for (var key in widget.searchedPartners.keys) {
+        widget.searchedPartners[key] = <Optician>[];
+      }
+      widget.partners.forEach((key, opticianList) {
+        List<Optician> matchingOpticians = opticianList
+            .where((optician) =>
+                optician.name.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        if (matchingOpticians.isNotEmpty) {
+          widget.searchedPartners[key] = matchingOpticians;
+        }
+      });
+    });
+  }
 }
 
 class PartnerListItem extends StatefulWidget {
   PartnerListViewState listState;
   ValueChanged<Optician> openDetailsListView;
-  Map<String, List<Optician>> listViewValues = {};
+  Map<String, List<Optician>> partners = {};
   String letter;
 
-  PartnerListItem(this.listState, this.openDetailsListView, this.listViewValues,
-      this.letter,
+  PartnerListItem(
+      this.listState, this.openDetailsListView, this.partners, this.letter,
       {super.key});
 
   @override
@@ -165,6 +191,9 @@ class PartnerListItem extends StatefulWidget {
 class PartnerListItemState extends State<PartnerListItem> {
   @override
   Widget build(BuildContext context) {
+    if (widget.partners[widget.letter]!.isEmpty) {
+      return SizedBox();
+    }
     var letterText = Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -182,7 +211,7 @@ class PartnerListItemState extends State<PartnerListItem> {
       ),
     );
     List<Widget> partnerItems = [];
-    widget.listViewValues[widget.letter]?.forEach((partner) {
+    widget.partners[widget.letter]?.forEach((partner) {
       partnerItems.add(
         InkWell(
           onTap: () => openDetailsView(partner),
@@ -204,7 +233,9 @@ class PartnerListItemState extends State<PartnerListItem> {
                       padding: EdgeInsets.all(0),
                       onPressed: () => onMakeFavouritePress(partner),
                       icon: Icon(
-                        partner.isFavourite ? Icons.star : Icons.star_outline,
+                        partner.id == OpticianApp.user?.favouriteOpticianId
+                            ? Icons.star
+                            : Icons.star_outline,
                         color: DefaultProperties.blueColor,
                       ))
                 ],
@@ -229,11 +260,7 @@ class PartnerListItemState extends State<PartnerListItem> {
 
   void onMakeFavouritePress(Optician partner) {
     widget.listState.setState(() {
-      var isFavourite = partner.isFavourite;
-      widget.listState.widget.partner.forEach((element) {
-        element.isFavourite = false;
-      });
-      partner.isFavourite = !isFavourite;
+      OpticianApp.user?.favouriteOpticianId = partner.id;
     });
   }
 }

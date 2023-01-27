@@ -2,6 +2,7 @@ import 'package:clean_calendar/clean_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/default_properties.dart';
+import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/location.dart';
 import 'package:opticianapp/model/optician.dart';
 import 'package:opticianapp/widget/stateful/partnerlist_details.dart';
@@ -19,44 +20,44 @@ class PartnerDetailsViewState extends State<PartnerDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                right: DefaultProperties.morePadding,
-                top: DefaultProperties.doubleMorePadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                    onPressed: () => {onBackButton()},
-                    icon: Icon(Icons.arrow_back)),
-                Text(
-                  "Zurück",
-                  style: TextStyle(fontSize: DefaultProperties.fontSize2),
-                ),
-              ],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: DefaultProperties.morePadding),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                      onPressed: () => {onBackButton()},
+                      icon: Icon(Icons.arrow_back)),
+                  Text(
+                    "Zurück",
+                    style: TextStyle(fontSize: DefaultProperties.fontSize2),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(DefaultProperties.lessPadding),
-            child: Text(
-              widget.partner.name,
-              style: TextStyle(fontSize: DefaultProperties.fontSize1),
+            Padding(
+              padding: EdgeInsets.all(DefaultProperties.lessPadding),
+              child: Text(
+                widget.partner.name,
+                style: TextStyle(fontSize: DefaultProperties.fontSize1),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(DefaultProperties.lessPadding),
-            child: Text(
-              "Bitte noch machen i heul",
-              style: TextStyle(
-                  fontSize: DefaultProperties.fontSize2,
-                  color: DefaultProperties.blueColor),
+            Padding(
+              padding: EdgeInsets.all(DefaultProperties.lessPadding),
+              child: Text(
+                "Bitte noch machen i heul",
+                style: TextStyle(
+                    fontSize: DefaultProperties.fontSize2,
+                    color: DefaultProperties.blueColor),
+              ),
             ),
-          ),
-          PartnerDetailsItemView(widget.partner),
-        ],
+            PartnerDetailsItemView(widget.partner),
+          ],
+        ),
       ),
     );
   }
@@ -78,6 +79,10 @@ class PartnerDetailsItemView extends StatefulWidget {
 class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
   @override
   Widget build(BuildContext context) {
+    var favouriteLocationId =
+        OpticianApp.user?.favouriteOpticianLocations[widget.partner.id];
+    Location favouriteLocation = widget.partner.locations
+        .singleWhere((element) => element.id == favouriteLocationId);
     return Container(
       margin: EdgeInsets.all(DefaultProperties.defaultPadding),
       padding: EdgeInsets.all(DefaultProperties.defaultPadding),
@@ -126,11 +131,11 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            "${widget.partner.favouriteLocation.street} ${widget.partner.favouriteLocation.streetNumber}",
+                            "${favouriteLocation.street} ${favouriteLocation.streetNumber}",
                             style: TextStyle(
                                 fontSize: DefaultProperties.fontSize2)),
                         Text(
-                            "${widget.partner.favouriteLocation.zipCode} ${widget.partner.favouriteLocation.city}",
+                            "${favouriteLocation.zipCode} ${favouriteLocation.city}",
                             style: TextStyle(
                                 fontSize: DefaultProperties.fontSize2))
                       ],
@@ -332,12 +337,11 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: DefaultProperties.doubleMorePadding),
-            child: Row(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
@@ -347,78 +351,79 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
                     style: TextStyle(fontSize: DefaultProperties.fontSize2)),
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(DefaultProperties.lessPadding),
-            child: Text(
-              widget.partner.name,
-              style: TextStyle(fontSize: DefaultProperties.fontSize1),
+            Padding(
+              padding: EdgeInsets.all(DefaultProperties.lessPadding),
+              child: Text(
+                widget.partner.name,
+                style: TextStyle(fontSize: DefaultProperties.fontSize1),
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(DefaultProperties.lessPadding),
-            child: Text(
-              "Bitte noch machen i heul",
-              style: TextStyle(
-                  fontSize: DefaultProperties.fontSize2,
-                  color: DefaultProperties.blueColor),
+            Padding(
+              padding: EdgeInsets.all(DefaultProperties.lessPadding),
+              child: Text(
+                "Bitte noch machen i heul",
+                style: TextStyle(
+                    fontSize: DefaultProperties.fontSize2,
+                    color: DefaultProperties.blueColor),
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(DefaultProperties.morePadding),
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.white, Colors.white.withOpacity(0.05)],
-                    stops: [0.75, 1],
-                    tileMode: TileMode.mirror,
-                  ).createShader(bounds);
-                },
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (overscroll) {
-                    overscroll.disallowIndicator();
-                    return true;
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(DefaultProperties.morePadding),
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white, Colors.white.withOpacity(0.05)],
+                      stops: [0.75, 1],
+                      tileMode: TileMode.mirror,
+                    ).createShader(bounds);
                   },
-                  child: ListView.builder(
-                    itemCount: widget.partner.locations.length + 1,
-                    itemBuilder: (context, index) {
-                      Widget item = SizedBox.shrink();
-                      if (index == 0) {
-                        item = Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: DefaultProperties.lightGrayColor,
-                                width: 1,
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overscroll) {
+                      overscroll.disallowIndicator();
+                      return true;
+                    },
+                    child: ListView.builder(
+                      itemCount: widget.partner.locations.length + 1,
+                      itemBuilder: (context, index) {
+                        Widget item = SizedBox.shrink();
+                        if (index == 0) {
+                          item = Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: DefaultProperties.lightGrayColor,
+                                  width: 1,
+                                ),
                               ),
                             ),
-                          ),
-                          child: Text("Filialen",
-                              style: TextStyle(
-                                  fontSize: DefaultProperties.fontSize2)),
+                            child: Text("Filialen",
+                                style: TextStyle(
+                                    fontSize: DefaultProperties.fontSize2)),
+                          );
+                        } else {
+                          index--;
+                          item = PartnerLocationListItem(
+                              this, widget.partner, index);
+                        }
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              bottom:
+                                  index == widget.partner.locations.length - 1
+                                      ? DefaultProperties.doubleMorePadding
+                                      : 0),
+                          child: item,
                         );
-                      } else {
-                        index--;
-                        item = PartnerLocationListItem(
-                            this, widget.partner, index);
-                      }
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            bottom: index == widget.partner.locations.length - 1
-                                ? DefaultProperties.doubleMorePadding
-                                : 0),
-                        child: item,
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -440,7 +445,9 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
   @override
   Widget build(BuildContext context) {
     var location = widget.partner.locations[widget.index];
-    var isFavourite = widget.partner.favouriteLocation == location;
+    var isFavourite =
+        OpticianApp.user?.favouriteOpticianLocations[widget.partner.id] ==
+            location.id;
     return InkWell(
       onTap: () => {
         makeLocationFavouriteAndGoBackToDetails(
@@ -486,7 +493,7 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
 
   void makeLocationFavourite(Optician partner, Location location) {
     widget.currentState.setState(() {
-      partner.favouriteLocation = location;
+      OpticianApp.user?.favouriteOpticianLocations[partner.id] = location.id;
     });
   }
 
@@ -509,8 +516,7 @@ class PartnerDateViewState extends State<PartnerDateView> {
   Widget build(BuildContext context) {
     List<DateTime> selectedDates = getDates();
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: DefaultProperties.doubleMorePadding),
+      body: SafeArea(
         child: Column(
           children: [
             Row(

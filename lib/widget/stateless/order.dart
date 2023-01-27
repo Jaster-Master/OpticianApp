@@ -61,8 +61,7 @@ class OrderView extends StatelessWidget {
       ),
     );
 
-    return Padding(
-      padding: EdgeInsets.only(top: DefaultProperties.defaultPadding),
+    return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(DefaultProperties.morePadding),
         child: Column(
@@ -82,7 +81,8 @@ class OrderView extends StatelessWidget {
                       tileMode: TileMode.mirror,
                     ).createShader(bounds);
                   },
-                  child: NotificationListener<OverscrollIndicatorNotification>(
+                  child:
+                      NotificationListener<OverscrollIndicatorNotification>(
                     onNotification: (overscroll) {
                       overscroll.disallowIndicator();
                       return true;

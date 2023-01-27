@@ -54,29 +54,31 @@ class HomeViewState extends State<HomeView> {
       }
     });
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: NotificationListener<OverscrollIndicatorNotification>(
-              onNotification: (overscroll) {
-                overscroll.disallowIndicator();
-                return true;
-              },
-              child: PageView(
-                controller: controller,
-                onPageChanged: (page) {
-                  setState(() {
-                    pageChanged(page);
-                  });
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overscroll) {
+                  overscroll.disallowIndicator();
+                  return true;
                 },
-                children: [
-                  AppointmentView(widget.appointments, controller),
-                  OrderView(widget.orders, controller)
-                ],
+                child: PageView(
+                  controller: controller,
+                  onPageChanged: (page) {
+                    setState(() {
+                      pageChanged(page);
+                    });
+                  },
+                  children: [
+                    AppointmentView(widget.appointments, controller),
+                    OrderView(widget.orders, controller)
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
+import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/user.dart';
 import 'package:opticianapp/widget/stateful/page_slider.dart';
 
@@ -161,7 +162,7 @@ class LoginViewState extends State<LoginView> {
   }
 
   Future<bool> checkUserData(String userName, String password) async {
-    var body = jsonEncode(User(0, userName, password));
+    var body = jsonEncode(User(0, userName, password, 0, {}));
 
     var client = http.Client();
     try {
@@ -171,20 +172,21 @@ class LoginViewState extends State<LoginView> {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(body),
           )
-          .timeout(const Duration(seconds: 1));
+          .timeout(const Duration(seconds: 4));
       if (response.statusCode.toString().startsWith('2')) {
         var json = jsonDecode(response.body) as Map<String, dynamic>;
-        if (json["userCheck"] as bool == true) {
+        if (json.isEmpty) {
           setState(() {
-            errorTextUserData = null;
+            errorTextUserData =
+                "Diese Benutzerdaten sind ungültig oder existieren nicht!";
           });
-          return true;
+          return false;
         }
+        OpticianApp.user = User.fromJson(json);
         setState(() {
-          errorTextUserData =
-              "Diese Benutzerdaten sind ungültig oder existieren nicht!";
+          errorTextUserData = null;
         });
-        return false;
+        return true;
       } else {
         setState(() {
           errorTextUserData =

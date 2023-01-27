@@ -5,7 +5,7 @@ class FaqContactLensesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("FAQ Kontaktlinsen");
+    return SafeArea(child: Text("FAQ Kontaktlinsen"));
   }
 }
 
@@ -14,6 +14,6 @@ class FaqGlassesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("FAQ Brillen");
+    return SafeArea(child: Text("FAQ Brillen"));
   }
 }

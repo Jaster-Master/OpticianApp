@@ -19,18 +19,22 @@ class JsonReader {
     resetData();
     var client = http.Client();
     try {
-      var response = await client.get(Uri.parse(
-          "${DefaultProperties.serverIpAddress}/eyeglass-prescriptions"));
+      var response = await client
+          .get(Uri.parse(
+              "${DefaultProperties.serverIpAddress}/eyeglass-prescriptions"))
+          .timeout(const Duration(seconds: 4));
       if (response.statusCode.toString().startsWith('2')) {
         jsonEyeglassPrescriptions = jsonDecode(response.body) as List<dynamic>;
       }
       response = await client
-          .get(Uri.parse("${DefaultProperties.serverIpAddress}/appointments"));
+          .get(Uri.parse("${DefaultProperties.serverIpAddress}/appointments"))
+          .timeout(const Duration(seconds: 4));
       if (response.statusCode.toString().startsWith('2')) {
         jsonAppointments = jsonDecode(response.body) as List<dynamic>;
       }
       response = await client
-          .get(Uri.parse("${DefaultProperties.serverIpAddress}/orders"));
+          .get(Uri.parse("${DefaultProperties.serverIpAddress}/orders"))
+          .timeout(const Duration(seconds: 4));
       if (response.statusCode.toString().startsWith('2')) {
         jsonOrders = jsonDecode(response.body) as List<dynamic>;
       }

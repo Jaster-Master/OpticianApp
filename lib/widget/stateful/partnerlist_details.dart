@@ -5,7 +5,6 @@ import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/location.dart';
 import 'package:opticianapp/model/optician.dart';
-import 'package:opticianapp/widget/stateful/partnerlist_details.dart';
 
 class PartnerDetailsView extends StatefulWidget {
   Optician partner;
@@ -81,8 +80,10 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
   Widget build(BuildContext context) {
     var favouriteLocationId =
         OpticianApp.user?.favouriteOpticianLocations[widget.partner.id];
-    Location favouriteLocation = widget.partner.locations
-        .singleWhere((element) => element.id == favouriteLocationId);
+    Location favouriteLocation = favouriteLocationId == null
+        ? widget.partner.locations[0]
+        : widget.partner.locations
+            .singleWhere((element) => element.id == favouriteLocationId);
     return Container(
       margin: EdgeInsets.all(DefaultProperties.defaultPadding),
       padding: EdgeInsets.all(DefaultProperties.defaultPadding),
@@ -104,7 +105,15 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
               Text(widget.partner.name,
                   style: TextStyle(fontSize: DefaultProperties.fontSize1)),
               Spacer(),
-              Icon(Icons.star, color: DefaultProperties.blueColor)
+              IconButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () => onMakeFavouritePress(widget.partner),
+                  icon: Icon(
+                    widget.partner.id == OpticianApp.user?.favouriteOpticianId
+                        ? Icons.star
+                        : Icons.star_outline,
+                    color: DefaultProperties.blueColor,
+                  ))
             ],
           ),
           SizedBox(
@@ -302,6 +311,16 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
         ],
       ),
     );
+  }
+
+  void onMakeFavouritePress(Optician partner) {
+    setState(() {
+      if (OpticianApp.user?.favouriteOpticianId == partner.id) {
+        OpticianApp.user?.favouriteOpticianId = -1;
+      } else {
+        OpticianApp.user?.favouriteOpticianId = partner.id;
+      }
+    });
   }
 
   void goToLocations(BuildContext context, Optician partner) {

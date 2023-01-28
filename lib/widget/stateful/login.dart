@@ -255,29 +255,26 @@ class LoginViewState extends State<LoginView> {
     );
   }
 
-  void fetchAndCheckData() {
-    setHasNetworkConnection().then((value) {
-      isLoginButtonPressed = value;
-      if (value) {
-        checkUserData(userName, password).then((value) {
-          isLoginButtonPressed = value;
-          if (value) {
-            JsonReader.initData().then((value) {
-              isLoginButtonPressed = value;
-              if (value) {
-                redirectToApp();
-              } else {
-                closeLoadingDialog();
-              }
-            });
-          } else {
-            closeLoadingDialog();
-          }
-        });
-      } else {
-        closeLoadingDialog();
-      }
-    });
+  Future<void> fetchAndCheckData() async {
+    bool hasNetworkConnection = await setHasNetworkConnection();
+    if (!hasNetworkConnection) {
+      isLoginButtonPressed = false;
+      closeLoadingDialog();
+      return;
+    }
+    bool isValidUser = await checkUserData(userName, password);
+    if (!isValidUser) {
+      isLoginButtonPressed = false;
+      closeLoadingDialog();
+      return;
+    }
+    bool readJson = await JsonReader.initData();
+    if (!readJson) {
+      isLoginButtonPressed = false;
+      closeLoadingDialog();
+      return;
+    }
+    redirectToApp();
   }
 
   Future<void> closeLoadingDialog() async {

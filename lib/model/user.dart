@@ -13,7 +13,9 @@ class User {
         username = json['username'],
         password = json['password'],
         favouriteOpticianId = json['favouriteOpticianId'],
-        favouriteOpticianLocations = json['favouriteOpticianLocations'];
+        favouriteOpticianLocations =
+            (json['favouriteOpticianLocations'] as Map<String, dynamic>)
+                .map((key, value) => MapEntry(int.parse(key), value as int));
 
   Map<String, dynamic> toJson() => {
         'ID': id,

@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.goblinmaster.opticianapp">
     <uses-permission android:name="android.permission.INTERNET" />
-   <application
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <application
         android:label="opticianapp"
         android:name="${applicationName}"
         android:networkSecurityConfig="@xml/network_security_config"

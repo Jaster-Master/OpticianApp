@@ -375,7 +375,7 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PartnerDateView(),
+        builder: (context) => PartnerDateView(widget.partner),
       ),
     );
   }
@@ -573,7 +573,9 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
 }
 
 class PartnerDateView extends StatefulWidget {
-  PartnerDateView({super.key});
+  Optician partner;
+
+  PartnerDateView(this.partner, {super.key});
 
   @override
   State<StatefulWidget> createState() => PartnerDateViewState();
@@ -582,7 +584,7 @@ class PartnerDateView extends StatefulWidget {
 class PartnerDateViewState extends State<PartnerDateView> {
   @override
   Widget build(BuildContext context) {
-    List<DateTime> selectedDates = getDates();
+    List<DateTime> selectedDates = widget.partner.availableAppointments;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -622,91 +624,5 @@ class PartnerDateViewState extends State<PartnerDateView> {
         ),
       ),
     );
-  }
-
-  void showBookDialog() {
-    TextEditingController date = TextEditingController();
-    date.text = DefaultProperties.defaultDateFormat.format(DateTime.now());
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            scrollable: true,
-            title: Text('Erinnerung erstellen'),
-            content: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Titel',
-                        icon: Icon(Icons.title),
-                      ),
-                    ),
-                    TextField(
-                      controller: date,
-                      decoration: InputDecoration(
-                        labelText: 'Datum',
-                        icon: Icon(Icons.calendar_today),
-                      ),
-                      readOnly: true,
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101));
-
-                        if (pickedDate != null) {
-                          String formattedDate = DefaultProperties
-                              .defaultDateFormat
-                              .format(pickedDate);
-                          setState(() {
-                            date.text = formattedDate;
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                  child: Text("Abbrechen"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              TextButton(
-                  child: Text("Buchen"),
-                  onPressed: () {
-                    setState(() {
-                      // TODO book
-                    });
-
-                    Navigator.pop(context);
-                  }),
-            ],
-          );
-        });
-  }
-
-  onBackButton() {}
-
-  getDates() {
-    return [
-      DateTime(2022, 12, 5),
-      DateTime(2022, 12, 6),
-      DateTime(2022, 12, 7),
-      DateTime(2022, 12, 9),
-      DateTime(2022, 12, 10),
-      DateTime(2022, 12, 11),
-      DateTime(2022, 12, 13),
-      DateTime(2022, 12, 20),
-      DateTime(2022, 12, 21),
-      DateTime(2022, 12, 23),
-      DateTime(2022, 12, 24),
-    ];
   }
 }

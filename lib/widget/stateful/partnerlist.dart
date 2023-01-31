@@ -95,7 +95,8 @@ class PartnerListViewState extends State<PartnerListView> {
             tab,
             favouritePartner == null
                 ? SizedBox.shrink()
-                : PartnerFavouriteItem(openDetailsListView, favouritePartner),
+                : PartnerFavouriteItem(openDetailsListView,
+                    onRemoveFavouritePartnerLocation, favouritePartner),
             searchField,
             Expanded(
               child: Padding(
@@ -170,6 +171,12 @@ class PartnerListViewState extends State<PartnerListView> {
           widget.searchedPartners[key] = matchingOpticians;
         }
       });
+    });
+  }
+
+  void onRemoveFavouritePartnerLocation() {
+    setState(() {
+      OpticianApp.user?.favouriteOpticianId = -1;
     });
   }
 }
@@ -271,9 +278,12 @@ class PartnerListItemState extends State<PartnerListItem> {
 
 class PartnerFavouriteItem extends StatelessWidget {
   ValueChanged<Optician> openDetailsListView;
+  Function onRemoveFavouritePartnerLocation;
   Optician partner;
 
-  PartnerFavouriteItem(this.openDetailsListView, this.partner, {super.key});
+  PartnerFavouriteItem(this.openDetailsListView,
+      this.onRemoveFavouritePartnerLocation, this.partner,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +310,16 @@ class PartnerFavouriteItem extends StatelessWidget {
                 Text(partner.name,
                     style: TextStyle(fontSize: DefaultProperties.fontSize1)),
                 Spacer(),
-                Icon(Icons.star, color: DefaultProperties.blueColor)
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () => onRemoveFavouritePartnerLocation(),
+                  icon: Icon(
+                    partner.id == OpticianApp.user?.favouriteOpticianId
+                        ? Icons.star
+                        : Icons.star_outline,
+                    color: DefaultProperties.blueColor,
+                  ),
+                )
               ],
             ),
             Row(

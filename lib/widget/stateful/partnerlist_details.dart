@@ -80,10 +80,11 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
   Widget build(BuildContext context) {
     var favouriteLocationId =
         OpticianApp.user?.favouriteOpticianLocations[widget.partner.id];
-    Location favouriteLocation = favouriteLocationId == null
-        ? widget.partner.locations[0]
-        : widget.partner.locations
-            .singleWhere((element) => element.id == favouriteLocationId);
+    Location favouriteLocation =
+        favouriteLocationId == -1 || favouriteLocationId == null
+            ? widget.partner.locations[0]
+            : widget.partner.locations
+                .singleWhere((element) => element.id == favouriteLocationId);
     return Container(
       margin: EdgeInsets.all(DefaultProperties.defaultPadding),
       padding: EdgeInsets.all(DefaultProperties.defaultPadding),
@@ -113,7 +114,7 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                         ? Icons.star
                         : Icons.star_outline,
                     color: DefaultProperties.blueColor,
-                  ))
+                  ),)
             ],
           ),
           SizedBox(
@@ -512,7 +513,12 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
 
   void makeLocationFavourite(Optician partner, Location location) {
     widget.currentState.setState(() {
-      OpticianApp.user?.favouriteOpticianLocations[partner.id] = location.id;
+      if (OpticianApp.user?.favouriteOpticianLocations[partner.id] ==
+          location.id) {
+        OpticianApp.user?.favouriteOpticianLocations[partner.id] = -1;
+      } else {
+        OpticianApp.user?.favouriteOpticianLocations[partner.id] = location.id;
+      }
     });
   }
 

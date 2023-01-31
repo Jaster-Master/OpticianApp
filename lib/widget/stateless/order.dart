@@ -61,6 +61,7 @@ class OrderView extends StatelessWidget {
       ),
     );
 
+    orders.sort((a, b) => b.due.compareTo(a.due));
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(DefaultProperties.morePadding),

@@ -53,7 +53,7 @@ class JsonReader {
   }
 
   static void readEyeglassPrescriptions() {
-    jsonEyeglassPrescriptions?.forEach((element) {
+    jsonEyeglassPrescriptions.forEach((element) {
       if (element == null) return;
       // Pass, Auftrag, Termin
       if (element["type"][0] == "P") {
@@ -63,7 +63,7 @@ class JsonReader {
   }
 
   static void readOrders() {
-    jsonOrders?.forEach((element) {
+    jsonOrders.forEach((element) {
       if (element == null) return;
       // Pass, Auftrag, Termin
       if (element["type"][0] == "A") {
@@ -73,7 +73,7 @@ class JsonReader {
   }
 
   static void readAppointments() {
-    jsonAppointments?.forEach((element) {
+    jsonAppointments.forEach((element) {
       if (element == null) return;
       // Pass, Auftrag, Termin
       if (element["type"][0] == "T") {

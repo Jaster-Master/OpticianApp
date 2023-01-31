@@ -76,7 +76,7 @@ class AppointmentViewState extends State<AppointmentView> {
           child: IconButton(
             tooltip: "Erinnerung hinzufügen",
             padding: EdgeInsets.zero,
-            onPressed: () => {onAddAppointment()},
+            onPressed: () => {onAddReminder()},
             icon: Icon(
               Icons.add,
               size: DefaultProperties.buttonSize,
@@ -107,6 +107,7 @@ class AppointmentViewState extends State<AppointmentView> {
       ),
     );
 
+    widget.appointments.sort((a, b) => b.due.compareTo(a.due));
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.all(DefaultProperties.morePadding),
@@ -158,7 +159,7 @@ class AppointmentViewState extends State<AppointmentView> {
     widget.controller.jumpToPage(1);
   }
 
-  void onAddAppointment() {
+  void onAddReminder() {
     TextEditingController date = TextEditingController();
     String title = "";
     date.text = DefaultProperties.defaultDateFormat.format(DateTime.now());
@@ -587,7 +588,7 @@ class AppointmentItemState extends State<AppointmentItem> {
                     if (!_formKey.currentState!.validate()) return;
 
                     editReminderJson(id, text, date.text).then((value) => {
-                          setState(() {
+                          widget.parentState.setState(() {
                             var appointment = widget.appointments.singleWhere(
                                 (element) => element.id == value?['id']);
                             appointment.text = value?['text'];

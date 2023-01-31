@@ -9,4 +9,22 @@ class Location {
 
   Location(this.id,
       this.country, this.zipCode, this.city, this.street, this.streetNumber);
+
+  Location.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        country = json['country'],
+        zipCode = json['zipCode'],
+        city = json['city'],
+        street = json['street'],
+        streetNumber = json['streetNumber'];
+
+  Map<String, dynamic> toJson() =>
+      {
+        'ID': id,
+        'country': country,
+        'zipCode': zipCode,
+        'city': city,
+        'street': street,
+        'streetNumber': streetNumber
+      };
 }

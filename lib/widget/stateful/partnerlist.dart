@@ -1,24 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/location.dart';
 import 'package:opticianapp/model/optician.dart';
 import 'package:opticianapp/widget/stateful/partnerlist_details.dart';
 
-var location =
-    Location(0, "country", "zipCode", "city", "street", "streetNumber");
-var location2 =
-    Location(1, "country2", "zipCode2", "city2", "street2", "streetNumber2");
-
 class PartnerListView extends StatefulWidget {
-  List<Optician> partner = [
-    Optician(0, "Alex", "Test", [location, location2], "null", "null", "null",
-        [DateTime.now().add(Duration(days: 1)), DateTime.now()]),
-    Optician(1, "Nom", "Test", [location, location2], "null", "null", "null",
-        [DateTime.now().add(Duration(days: 1)), DateTime.now()])
-  ];
   Map<String, List<Optician>> partners = {};
   Map<String, List<Optician>> searchedPartners = {};
 
@@ -26,7 +16,7 @@ class PartnerListView extends StatefulWidget {
     List<String> alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     for (var letter in alphabet) {
       List<Optician> currentPartner = [];
-      for (var value in partner) {
+      for (var value in JsonReader.opticians) {
         if (value.name.toUpperCase().startsWith(letter)) {
           currentPartner.add(value);
         }
@@ -82,7 +72,7 @@ class PartnerListViewState extends State<PartnerListView> {
       ),
     );
 
-    var favouritePartner = widget.partner
+    var favouritePartner = JsonReader.opticians
         .where((element) => element.id == OpticianApp.user?.favouriteOpticianId)
         .firstOrNull;
 

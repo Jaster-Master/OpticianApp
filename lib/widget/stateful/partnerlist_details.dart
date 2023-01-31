@@ -1,10 +1,15 @@
 import 'package:clean_calendar/clean_calendar.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/location.dart';
 import 'package:opticianapp/model/optician.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PartnerDetailsView extends StatefulWidget {
   Optician partner;
@@ -48,7 +53,7 @@ class PartnerDetailsViewState extends State<PartnerDetailsView> {
             Padding(
               padding: EdgeInsets.all(DefaultProperties.lessPadding),
               child: Text(
-                "Bitte noch machen i heul",
+                "",
                 style: TextStyle(
                     fontSize: DefaultProperties.fontSize2,
                     color: DefaultProperties.blueColor),
@@ -107,14 +112,15 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                   style: TextStyle(fontSize: DefaultProperties.fontSize1)),
               Spacer(),
               IconButton(
-                  padding: EdgeInsets.all(0),
-                  onPressed: () => onMakeFavouritePress(widget.partner),
-                  icon: Icon(
-                    widget.partner.id == OpticianApp.user?.favouriteOpticianId
-                        ? Icons.star
-                        : Icons.star_outline,
-                    color: DefaultProperties.blueColor,
-                  ),)
+                padding: EdgeInsets.all(0),
+                onPressed: () => onMakeFavouritePress(widget.partner),
+                icon: Icon(
+                  widget.partner.id == OpticianApp.user?.favouriteOpticianId
+                      ? Icons.star
+                      : Icons.star_outline,
+                  color: DefaultProperties.blueColor,
+                ),
+              )
             ],
           ),
           SizedBox(
@@ -189,7 +195,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                                 fontSize: DefaultProperties.fontSize3))
                       ],
                     ),
-                    onPressed: () => {},
+                    onPressed: () {
+                      launchUrlString("tel:${widget.partner.phoneNumber}");
+                    },
                   ),
                 ),
               ),
@@ -217,7 +225,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                               color: Colors.black,
                               fontSize: DefaultProperties.fontSize3)),
                     ]),
-                    onPressed: () => {},
+                    onPressed: () {
+                      launchUrlString("mailto:${widget.partner.email}");
+                    },
                   ),
                 ),
               ),
@@ -247,7 +257,9 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                                 fontSize: DefaultProperties.fontSize3)),
                       ],
                     ),
-                    onPressed: () => {},
+                    onPressed: () {
+                      launchUrl(Uri.parse("https://${widget.partner.website}"));
+                    },
                   ),
                 ),
               ),
@@ -274,7 +286,7 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                               color: Colors.black,
                               fontSize: DefaultProperties.fontSize3)),
                     ]),
-                    onPressed: () => {showFreeDates(context)},
+                    onPressed: () => {showFreeDates(context, widget)},
                   ),
                 ),
               ),
@@ -303,7 +315,7 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
                                 fontSize: DefaultProperties.fontSize3))
                       ],
                     ),
-                    onPressed: () => {},
+                    onPressed: () => {_saveContact(widget)},
                   ),
                 ),
               ),
@@ -312,6 +324,31 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
         ],
       ),
     );
+  }
+
+  Future<void> _saveContact(PartnerDetailsItemView widget) async {
+    try {
+      PermissionStatus permission = await Permission.contacts.status;
+      if (permission != PermissionStatus.granted) {
+        await Permission.contacts.request();
+      }
+
+      permission = await Permission.contacts.status;
+      if (permission == PermissionStatus.granted) {
+        await ContactsService.addContact(Contact(
+            givenName: widget.partner.name,
+            company: widget.partner.website,
+            postalAddresses: _allPostalAddresses(widget),
+            emails: [
+              Item(label: 'Work', value: widget.partner.email)
+            ],
+            phones: [
+              Item(label: 'Mobile', value: widget.partner.phoneNumber)
+            ]));
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   void onMakeFavouritePress(Optician partner) {
@@ -334,13 +371,26 @@ class PartnerDetailsItemViewState extends State<PartnerDetailsItemView> {
     result.then((value) => setState(() {}));
   }
 
-  void showFreeDates(BuildContext context) {
+  void showFreeDates(BuildContext context, PartnerDetailsItemView widget) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PartnerDateView(),
       ),
     );
+  }
+
+  _allPostalAddresses(PartnerDetailsItemView widget) {
+    List<PostalAddress> items = [];
+    for (var value in widget.partner.locations) {
+      items.add(PostalAddress(
+          label: "Address",
+          street: "${value.street} ${value.streetNumber}",
+          city: value.city,
+          country: value.country,
+          postcode: value.zipCode));
+    }
+    return items;
   }
 }
 
@@ -381,7 +431,7 @@ class PartnerLocationsViewState extends State<PartnerLocationsView> {
             Padding(
               padding: EdgeInsets.all(DefaultProperties.lessPadding),
               child: Text(
-                "Bitte noch machen i heul",
+                "", // I heul
                 style: TextStyle(
                     fontSize: DefaultProperties.fontSize2,
                     color: DefaultProperties.blueColor),
@@ -469,10 +519,7 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
         OpticianApp.user?.favouriteOpticianLocations[widget.partner.id] ==
             location.id;
     return InkWell(
-      onTap: () => {
-        makeLocationFavouriteAndGoBackToDetails(
-            context, widget.partner, location)
-      },
+      onTap: () => openMap(location),
       child: Container(
         decoration: const BoxDecoration(
           border: Border(
@@ -500,10 +547,7 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
                 icon: Icon(isFavourite ? Icons.star : Icons.star_outline,
                     color: DefaultProperties.blueColor)),
             IconButton(
-                onPressed: () => {
-                      makeLocationFavouriteAndGoBackToDetails(
-                          context, widget.partner, location)
-                    },
+                onPressed: () => openMap(location),
                 icon: Icon(Icons.keyboard_arrow_right))
           ],
         ),
@@ -522,10 +566,9 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
     });
   }
 
-  void makeLocationFavouriteAndGoBackToDetails(
-      BuildContext context, Optician partner, Location location) {
-    makeLocationFavourite(partner, location);
-    Navigator.pop(context);
+  void openMap(Location location) {
+    MapsLauncher.launchQuery(
+        "${location.zipCode} ${location.city}, ${location.street} ${location.streetNumber}, ${location.country}");
   }
 }
 

@@ -8,7 +8,7 @@ import 'package:opticianapp/data/json_reader.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/main.dart';
 import 'package:opticianapp/model/user.dart';
-import 'package:opticianapp/widget/stateful/page_slider.dart';
+import 'package:opticianapp/widget/page_slider.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

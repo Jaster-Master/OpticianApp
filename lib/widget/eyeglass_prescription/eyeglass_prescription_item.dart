@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/default_properties.dart';
 import 'package:opticianapp/model/eyeglass_prescription.dart';
-import 'package:opticianapp/widget/stateless/eyegalss_prescription_details.dart';
-import 'package:opticianapp/widget/stateless/eyeglass_prescription_item.dart';
+
+import 'eyeglass_prescription_details.dart';
 
 class EyeglassPrescriptionItem extends StatelessWidget {
   EyeglassPrescription item;

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:opticianapp/model/appointment.dart';
 import 'package:opticianapp/model/order.dart';
-import 'package:opticianapp/widget/stateful/appointment.dart';
-import 'package:opticianapp/widget/stateless/order.dart';
+import 'package:opticianapp/widget/home/appointment.dart';
+import 'package:opticianapp/widget/home/order.dart';
 
 class HomeView extends StatefulWidget {
   List<Order> orders;

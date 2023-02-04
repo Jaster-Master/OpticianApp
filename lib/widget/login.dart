@@ -127,20 +127,22 @@ class LoginViewState extends State<LoginView> {
     );
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: Center(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Column(
-              children: [
-                loginLogo,
-                usernameField,
-                passwordField,
-                errorTextWidget,
-                errorTextWidgetCheckUserData,
-                loginButton,
-              ],
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Center(
+            child: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Column(
+                children: [
+                  loginLogo,
+                  usernameField,
+                  passwordField,
+                  errorTextWidget,
+                  errorTextWidgetCheckUserData,
+                  loginButton,
+                ],
+              ),
             ),
           ),
         ),

@@ -1,10 +1,60 @@
 @startuml
 set namespaceSeparator ::
 
+class "opticianapp::data::json_reader.dart::JsonReader" {
+  {static} +List<dynamic> jsonEyeglassPrescriptions
+  {static} +List<dynamic> jsonAppointments
+  {static} +List<dynamic> jsonOrders
+  {static} +List<dynamic> jsonOpticians
+  {static} +List<Appointment> appointments
+  {static} +List<Order> orders
+  {static} +List<EyeglassPrescription> eyeglassPrescriptions
+  {static} +List<Optician> opticians
+  {static} +Future<bool> initData()
+  {static} +void readEyeglassPrescriptions()
+  {static} +void readOrders()
+  {static} +void readAppointments()
+  {static} +void readOpticians()
+  {static} +void resetData()
+}
+
+class "opticianapp::data::json_writer.dart::JsonWriter" {
+  {static} +Future<Map<String, dynamic>> createReminderHttps()
+  {static} +Future<Map<String, dynamic>> editReminderHttps()
+  {static} +Future<bool> deleteReminder()
+}
+
+class "opticianapp::default_properties.dart::DefaultProperties" {
+  {static} +double fontSize1
+  {static} +double fontSize2
+  {static} +double fontSize3
+  {static} +double fontSize4
+  {static} +double lessPadding
+  {static} +double defaultPadding
+  {static} +double morePadding
+  {static} +double doubleMorePadding
+  {static} +double tripleMorePadding
+  {static} +double defaultRounded
+  {static} +double moreRounded
+  {static} +double iconSize
+  {static} +double buttonSize
+  {static} +Color blueColor
+  {static} +Color lightBlueColor
+  {static} +Color grayColor
+  {static} +String serverIpAddress
+  {static} +Color lightGrayColor
+  {static} +DateFormat defaultDateFormat
+}
+
+"opticianapp::default_properties.dart::DefaultProperties" o-- "dart::ui::Color"
+"opticianapp::default_properties.dart::DefaultProperties" o-- "intl::src::intl::date_format.dart::DateFormat"
+
 class "opticianapp::main.dart::OpticianApp" {
+  {static} +User? user
   +Widget build()
 }
 
+"opticianapp::main.dart::OpticianApp" o-- "opticianapp::model::user.dart::User"
 "flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::main.dart::OpticianApp"
 
 class "opticianapp::model::appointment.dart::Appointment" {
@@ -14,9 +64,10 @@ class "opticianapp::model::appointment.dart::Appointment" {
   +String text
   +DateTime due
   +DateTime timestamp
+  +Map<String, dynamic> toJson()
 }
 
-class "opticianapp::model::eyeglassPrescription.dart::EyeglassPrescription" {
+class "opticianapp::model::eyeglass_prescription.dart::EyeglassPrescription" {
   +int id
   +int customerId
   +String forename
@@ -42,20 +93,25 @@ class "opticianapp::model::eyeglassPrescription.dart::EyeglassPrescription" {
   +double basis2Right
   +double pdLeft
   +double pdRight
-  +double heightLeft
-  +double heightRight
+  +double hightLeft
+  +double hightRight
   +double amplification
   +DateTime timestamp
+  +Map<String, dynamic> toJson()
 }
 
 class "opticianapp::model::location.dart::Location" {
+  +int id
+  +String country
   +String zipCode
   +String city
   +String street
   +String streetNumber
+  +Map<String, dynamic> toJson()
 }
 
 class "opticianapp::model::optician.dart::Optician" {
+  +int id
   +String name
   +String description
   +List<Location> locations
@@ -63,6 +119,7 @@ class "opticianapp::model::optician.dart::Optician" {
   +String email
   +String website
   +List<DateTime> availableAppointments
+  +Map<String, dynamic> toJson()
 }
 
 class "opticianapp::model::order.dart::Order" {
@@ -73,164 +130,428 @@ class "opticianapp::model::order.dart::Order" {
   +DateTime due
   +bool finished
   +DateTime timestamp
+  +Map<String, dynamic> toJson()
 }
 
 class "opticianapp::model::user.dart::User" {
   +int id
   +String username
   +String password
+  +int favouriteOpticianId
+  +Map<int, int> favouriteOpticianLocations
+  +Map<String, dynamic> toJson()
 }
 
-class "opticianapp::notification::notificationHandler.dart::NotificationHandler" {
+class "opticianapp::notification::notification_handler.dart::NotificationHandler" {
   +FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin
+  +String notificationChannelId
+  +int notificationId
   +void init()
   +Future<bool?> requestPermission()
   +void showNotification()
 }
 
-"opticianapp::notification::notificationHandler.dart::NotificationHandler" o-- "flutter_local_notifications::src::flutter_local_notifications_plugin.dart::FlutterLocalNotificationsPlugin"
+"opticianapp::notification::notification_handler.dart::NotificationHandler" o-- "flutter_local_notifications::src::flutter_local_notifications_plugin.dart::FlutterLocalNotificationsPlugin"
 
-class "opticianapp::notification::notificationService.dart::NotificationService" {
-  +NotificationHandler notificationHandler
-  +String notificationChannelId
-  +int notificationId
+class "opticianapp::notification::notification_service.dart::NotificationService" {
+  {static} +NotificationHandler notificationHandler
   +Future<void> initializeService()
-  +Future<void> onStart()
+  {static} +Future<bool> onIosBackground()
+  {static} +Future<bool> onStart()
+  {static} +Future<void> checkDues()
+  {static} +Future<List<dynamic>?> getAppointmentDues()
+  {static} +Future<List<dynamic>?> getOrderDues()
 }
 
-"opticianapp::notification::notificationService.dart::NotificationService" o-- "opticianapp::notification::notificationHandler.dart::NotificationHandler"
+"opticianapp::notification::notification_service.dart::NotificationService" o-- "opticianapp::notification::notification_handler.dart::NotificationHandler"
 
-class "opticianapp::widget::stateful::appointment.dart::AppointmentView" {
+class "opticianapp::widget::eyeglass_prescription::eyeglass_prescription.dart::EyeglassPrescriptionView" {
+  +List<EyeglassPrescription> eyeglassPrescriptions
   +State<StatefulWidget> createState()
 }
 
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::stateful::appointment.dart::AppointmentView"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::eyeglass_prescription::eyeglass_prescription.dart::EyeglassPrescriptionView"
 
-class "opticianapp::widget::stateful::appointment.dart::AppointmentViewState" {
+class "opticianapp::widget::eyeglass_prescription::eyeglass_prescription.dart::EyeglassPrescriptionViewState" {
+  +int index
   +Widget build()
 }
 
-"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::stateful::appointment.dart::AppointmentViewState"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::eyeglass_prescription::eyeglass_prescription.dart::EyeglassPrescriptionViewState"
 
-class "opticianapp::widget::stateful::appointment.dart::AppointmentItem" {
+class "opticianapp::widget::eyeglass_prescription::eyeglass_prescription_details.dart::EyeglassPrescriptionDetailsView" {
+  +EyeglassPrescription item
   +Widget build()
+  +void onBackButtonPress()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateful::appointment.dart::AppointmentItem"
+"opticianapp::widget::eyeglass_prescription::eyeglass_prescription_details.dart::EyeglassPrescriptionDetailsView" o-- "opticianapp::model::eyeglass_prescription.dart::EyeglassPrescription"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::eyeglass_prescription::eyeglass_prescription_details.dart::EyeglassPrescriptionDetailsView"
 
-class "opticianapp::widget::stateful::appointment.dart::AppointmentItemDetails" {
+class "opticianapp::widget::eyeglass_prescription::eyeglass_prescription_item.dart::EyeglassPrescriptionItem" {
+  +EyeglassPrescription item
+  +int index
   +Widget build()
+  +void onItemPress()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateful::appointment.dart::AppointmentItemDetails"
+"opticianapp::widget::eyeglass_prescription::eyeglass_prescription_item.dart::EyeglassPrescriptionItem" o-- "opticianapp::model::eyeglass_prescription.dart::EyeglassPrescription"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::eyeglass_prescription::eyeglass_prescription_item.dart::EyeglassPrescriptionItem"
 
-class "opticianapp::widget::stateful::login.dart::LoginView" {
+class "opticianapp::widget::home::appointment.dart::AppointmentView" {
+  +List<Appointment> appointments
+  +PageController controller
   +State<StatefulWidget> createState()
 }
 
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::stateful::login.dart::LoginView"
+"opticianapp::widget::home::appointment.dart::AppointmentView" o-- "flutter::src::widgets::page_view.dart::PageController"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::home::appointment.dart::AppointmentView"
 
-class "opticianapp::widget::stateful::login.dart::LoginViewState" {
+class "opticianapp::widget::home::appointment.dart::AppointmentViewState" {
+  -GlobalKey<FormState> _formKey
   +Widget build()
+  +void onOrdersPress()
+  +void onAddReminder()
+  {static} +Future<Map<String, dynamic>?> createReminder()
 }
 
-"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::stateful::login.dart::LoginViewState"
+"opticianapp::widget::home::appointment.dart::AppointmentViewState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::home::appointment.dart::AppointmentViewState"
 
-class "opticianapp::widget::stateful::partnerlist.dart::PartnerListView" {
+class "opticianapp::widget::home::appointment_item.dart::AppointmentItem" {
+  +AppointmentViewState parentState
+  +List<Appointment> appointments
+  +Appointment item
   +State<StatefulWidget> createState()
 }
 
-"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::stateful::partnerlist.dart::PartnerListView"
+"opticianapp::widget::home::appointment_item.dart::AppointmentItem" o-- "opticianapp::widget::home::appointment.dart::AppointmentViewState"
+"opticianapp::widget::home::appointment_item.dart::AppointmentItem" o-- "opticianapp::model::appointment.dart::Appointment"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::home::appointment_item.dart::AppointmentItem"
 
-class "opticianapp::widget::stateful::partnerlist.dart::PartnerListViewState" {
+class "opticianapp::widget::home::appointment_item.dart::AppointmentItemState" {
+  -GlobalKey<FormState> _formKey
+  +Widget build()
+  +void onItemPress()
+  +void onMenuPress()
+  +void deleteReminder()
+  +void editReminder()
+  +Future<Map<String, dynamic>?> editReminderJson()
+}
+
+"opticianapp::widget::home::appointment_item.dart::AppointmentItemState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::home::appointment_item.dart::AppointmentItemState"
+
+class "opticianapp::widget::home::home.dart::HomeView" {
+  +List<Order> orders
+  +List<Appointment> appointments
+  +void Function(bool) updateView
+  +bool isAppointmentView
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::home::home.dart::HomeView" o-- "flutter::src::foundation::basic_types.dart::void Function(bool)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::home::home.dart::HomeView"
+
+class "opticianapp::widget::home::home.dart::HomeViewState" {
+  +List<bool> activePages
+  +PageController controller
+  +void updateView()
+  +void initState()
+  +void dispose()
+  +Widget build()
+  +void pageChanged()
+}
+
+"opticianapp::widget::home::home.dart::HomeViewState" o-- "flutter::src::widgets::page_view.dart::PageController"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::home::home.dart::HomeViewState"
+
+class "opticianapp::widget::home::order.dart::OrderView" {
+  +List<Order> orders
+  +PageController controller
+  +Widget build()
+  +void onAppointmentsPress()
+}
+
+"opticianapp::widget::home::order.dart::OrderView" o-- "flutter::src::widgets::page_view.dart::PageController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::home::order.dart::OrderView"
+
+class "opticianapp::widget::home::order_item.dart::OrderItem" {
+  +Order item
+  +Widget build()
+  +void onItemPress()
+}
+
+"opticianapp::widget::home::order_item.dart::OrderItem" o-- "opticianapp::model::order.dart::Order"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::home::order_item.dart::OrderItem"
+
+class "opticianapp::widget::information::about.dart::AboutView" {
+  +Widget build()
+  +void onBackButtonPress()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::information::about.dart::AboutView"
+
+class "opticianapp::widget::information::faq_contact_lenses.dart::FaqContactLensesView" {
+  +List<String> questions
+  +List<String> answers
+  +Widget build()
+  +void onBackButtonPress()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::information::faq_contact_lenses.dart::FaqContactLensesView"
+
+class "opticianapp::widget::information::faq_glasses.dart::FaqGlassesView" {
+  +List<String> questions
+  +List<String> answers
+  +Widget build()
+  +void onBackButtonPress()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::information::faq_glasses.dart::FaqGlassesView"
+
+class "opticianapp::widget::information::feedback.dart::FeedbackView" {
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::information::feedback.dart::FeedbackView"
+
+class "opticianapp::widget::information::feedback.dart::FeedbackViewState" {
+  -GlobalKey<FormState> _formKey
+  +String? feedbackText
+  +Widget build()
+  +void onSendFeedback()
+  +void onBackButtonPress()
+}
+
+"opticianapp::widget::information::feedback.dart::FeedbackViewState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::information::feedback.dart::FeedbackViewState"
+
+class "opticianapp::widget::information::imprint.dart::ImprintView" {
+  +Widget build()
+  +void onBackButtonPress()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::information::imprint.dart::ImprintView"
+
+class "opticianapp::widget::information::information.dart::InformationView" {
   +Widget build()
 }
 
-"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::stateful::partnerlist.dart::PartnerListViewState"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::information::information.dart::InformationView"
 
-class "opticianapp::widget::stateful::partnerlist.dart::PartnerDetails" {
+class "opticianapp::widget::information::information.dart::InformationItemView" {
+  +String title
+  +Icon icon
+  +Widget navigatorWidget
+  +bool isFirstItem
+  +bool isLastItem
+  +Color textColor
+  +Widget build()
+  +void navigateToView()
+}
+
+"opticianapp::widget::information::information.dart::InformationItemView" o-- "flutter::src::widgets::icon.dart::Icon"
+"opticianapp::widget::information::information.dart::InformationItemView" o-- "flutter::src::widgets::framework.dart::Widget"
+"opticianapp::widget::information::information.dart::InformationItemView" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::information::information.dart::InformationItemView"
+
+class "opticianapp::widget::login.dart::LoginView" {
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::login.dart::LoginView"
+
+class "opticianapp::widget::login.dart::LoginViewState" {
+  -GlobalKey<FormState> _formKey
+  +String? errorText
+  +String? errorTextUserData
+  +String userName
+  +String password
+  +bool isLoginButtonPressed
+  +BuildContext? loadingDialogContext
+  +Widget build()
+  +void onLogin()
+  +void redirectToApp()
+  +Future<bool> checkUserData()
+  +void addNetworkConnectionListener()
+  +Future<bool> setHasNetworkConnection()
+  +void showLoadingDialog()
+  +Future<void> fetchAndCheckData()
+  +Future<void> closeLoadingDialog()
+}
+
+"opticianapp::widget::login.dart::LoginViewState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"opticianapp::widget::login.dart::LoginViewState" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::login.dart::LoginViewState"
+
+class "opticianapp::widget::page_slider.dart::PageSlider" {
+  +bool isAppointmentView
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::page_slider.dart::PageSlider"
+
+class "opticianapp::widget::page_slider.dart::PageSliderState" {
+  +List<bool> activePages
+  +PageController controller
+  +void dispose()
+  +void updateView()
+  +Widget build()
+  +void pageChanged()
+}
+
+"opticianapp::widget::page_slider.dart::PageSliderState" o-- "flutter::src::widgets::page_view.dart::PageController"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::page_slider.dart::PageSliderState"
+
+class "opticianapp::widget::page_slider_icon.dart::PageSliderIcon" {
+  +PageController controller
+  +int index
+  +IconData icon
+  +bool isActive
+  +String tooltip
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::page_slider_icon.dart::PageSliderIcon" o-- "flutter::src::widgets::page_view.dart::PageController"
+"opticianapp::widget::page_slider_icon.dart::PageSliderIcon" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::page_slider_icon.dart::PageSliderIcon"
+
+class "opticianapp::widget::page_slider_icon.dart::PageIconState" {
+  +Widget build()
+  +void onIconPressed()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::page_slider_icon.dart::PageIconState"
+
+class "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListView" {
+  +Map<String, List<Optician>> partners
+  +Map<String, List<Optician>> searchedPartners
+  +State<StatefulWidget> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListView"
+
+class "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListViewState" {
+  +Widget build()
+  +void openDetailsListView()
+  +void updateNewSearch()
+  +void onRemoveFavouritePartnerLocation()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListViewState"
+
+class "opticianapp::widget::partnerlist::partnerlist_favourite_item.dart::PartnerFavouriteItem" {
+  +void Function(Optician) openDetailsListView
+  +Function onRemoveFavouritePartnerLocation
+  +Optician partner
   +Widget build()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateful::partnerlist.dart::PartnerDetails"
+"opticianapp::widget::partnerlist::partnerlist_favourite_item.dart::PartnerFavouriteItem" o-- "flutter::src::foundation::basic_types.dart::void Function(Optician)"
+"opticianapp::widget::partnerlist::partnerlist_favourite_item.dart::PartnerFavouriteItem" o-- "opticianapp::model::optician.dart::Optician"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::partnerlist::partnerlist_favourite_item.dart::PartnerFavouriteItem"
 
-class "opticianapp::widget::stateful::partnerlist.dart::PartnerLocations" {
+class "opticianapp::widget::partnerlist::partnerlist_item.dart::PartnerListItem" {
+  +PartnerListViewState listState
+  +void Function(Optician) openDetailsListView
+  +Map<String, List<Optician>> partners
+  +String letter
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::partnerlist::partnerlist_item.dart::PartnerListItem" o-- "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListViewState"
+"opticianapp::widget::partnerlist::partnerlist_item.dart::PartnerListItem" o-- "flutter::src::foundation::basic_types.dart::void Function(Optician)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist::partnerlist_item.dart::PartnerListItem"
+
+class "opticianapp::widget::partnerlist::partnerlist_item.dart::PartnerListItemState" {
+  +Widget build()
+  +void openDetailsView()
+  +void onMakeFavouritePress()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist::partnerlist_item.dart::PartnerListItemState"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_available_appointments.dart::PartnerAvailableAppointmentsView" {
+  +Optician partner
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::partnerlist_details::partnerlist_available_appointments.dart::PartnerAvailableAppointmentsView" o-- "opticianapp::model::optician.dart::Optician"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist_details::partnerlist_available_appointments.dart::PartnerAvailableAppointmentsView"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_available_appointments.dart::PartnerAvailableAppointmentsViewState" {
   +Widget build()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateful::partnerlist.dart::PartnerLocations"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist_details::partnerlist_available_appointments.dart::PartnerAvailableAppointmentsViewState"
 
-class "opticianapp::widget::stateless::about.dart::AboutView" {
+class "opticianapp::widget::partnerlist_details::partnerlist_details.dart::PartnerDetailsView" {
+  +Optician partner
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::partnerlist_details::partnerlist_details.dart::PartnerDetailsView" o-- "opticianapp::model::optician.dart::Optician"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist_details::partnerlist_details.dart::PartnerDetailsView"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_details.dart::PartnerDetailsViewState" {
+  +Widget build()
+  +void onBackButton()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist_details::partnerlist_details.dart::PartnerDetailsViewState"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_details_item.dart::PartnerDetailsItemView" {
+  +Optician partner
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::partnerlist_details::partnerlist_details_item.dart::PartnerDetailsItemView" o-- "opticianapp::model::optician.dart::Optician"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist_details::partnerlist_details_item.dart::PartnerDetailsItemView"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_details_item.dart::PartnerDetailsItemViewState" {
+  +Widget build()
+  -Future<void> _saveContact()
+  +void onMakeFavouritePress()
+  +void goToLocations()
+  +void showFreeDates()
+  -dynamic _allPostalAddresses()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist_details::partnerlist_details_item.dart::PartnerDetailsItemViewState"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_locations.dart::PartnerLocationsView" {
+  +Optician partner
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::partnerlist_details::partnerlist_locations.dart::PartnerLocationsView" o-- "opticianapp::model::optician.dart::Optician"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist_details::partnerlist_locations.dart::PartnerLocationsView"
+
+class "opticianapp::widget::partnerlist_details::partnerlist_locations.dart::PartnerLocationsViewState" {
   +Widget build()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::about.dart::AboutView"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist_details::partnerlist_locations.dart::PartnerLocationsViewState"
 
-class "opticianapp::widget::stateless::eyeglassPrescription.dart::EyeglassPrescription" {
-  +Widget build()
+class "opticianapp::widget::partnerlist_details::partnerlist_location_item.dart::PartnerLocationListItem" {
+  +PartnerLocationsViewState currentState
+  +Optician partner
+  +int index
+  +State<StatefulWidget> createState()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::eyeglassPrescription.dart::EyeglassPrescription"
+"opticianapp::widget::partnerlist_details::partnerlist_location_item.dart::PartnerLocationListItem" o-- "opticianapp::widget::partnerlist_details::partnerlist_locations.dart::PartnerLocationsViewState"
+"opticianapp::widget::partnerlist_details::partnerlist_location_item.dart::PartnerLocationListItem" o-- "opticianapp::model::optician.dart::Optician"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "opticianapp::widget::partnerlist_details::partnerlist_location_item.dart::PartnerLocationListItem"
 
-class "opticianapp::widget::stateless::faq.dart::FaqView" {
+class "opticianapp::widget::partnerlist_details::partnerlist_location_item.dart::PartnerLocationListItemState" {
   +Widget build()
+  +void makeLocationFavourite()
+  +void openMap()
 }
 
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::faq.dart::FaqView"
-
-class "opticianapp::widget::stateless::impressum.dart::ImpressumView" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::impressum.dart::ImpressumView"
-
-class "opticianapp::widget::stateless::order.dart::OrderView" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::order.dart::OrderView"
-
-class "opticianapp::widget::stateless::order.dart::OrderItem" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::order.dart::OrderItem"
-
-class "opticianapp::widget::stateless::order.dart::OrderItemDetails" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::order.dart::OrderItemDetails"
-
-class "opticianapp::widget::stateless::settings.dart::Settings" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::settings.dart::Settings"
-
-class "opticianapp::widget::stateless::settings.dart::FAQ" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::settings.dart::FAQ"
-
-class "opticianapp::widget::stateless::settings.dart::Impressum" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::settings.dart::Impressum"
-
-class "opticianapp::widget::stateless::settings.dart::About" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::settings.dart::About"
-
-class "opticianapp::widget::stateless::settings.dart::Feedback" {
-  +Widget build()
-}
-
-"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "opticianapp::widget::stateless::settings.dart::Feedback"
+"flutter::src::widgets::framework.dart::State" <|-- "opticianapp::widget::partnerlist_details::partnerlist_location_item.dart::PartnerLocationListItemState"
 
 
 @enduml

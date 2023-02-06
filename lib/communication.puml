@@ -1,0 +1,25 @@
+@startuml
+class "opticianapp::data::json_reader.dart::JsonReader" {
+  {static} +List<dynamic> jsonEyeglassPrescriptions
+  {static} +List<dynamic> jsonAppointments
+  {static} +List<dynamic> jsonOrders
+  {static} +List<dynamic> jsonOpticians
+  {static} +List<Appointment> appointments
+  {static} +List<Order> orders
+  {static} +List<EyeglassPrescription> eyeglassPrescriptions
+  {static} +List<Optician> opticians
+  {static} +Future<bool> initData()
+  {static} +void readEyeglassPrescriptions()
+  {static} +void readOrders()
+  {static} +void readAppointments()
+  {static} +void readOpticians()
+  {static} +void resetData()
+}
+
+class "opticianapp::data::json_writer.dart::JsonWriter" {
+  {static} +Future<Map<String, dynamic>> createReminderHttps()
+  {static} +Future<Map<String, dynamic>> editReminderHttps()
+  {static} +Future<bool> deleteReminder()
+}
+
+@enduml

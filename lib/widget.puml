@@ -1,0 +1,67 @@
+@startuml
+set namespaceSeparator ::
+
+class "opticianapp::main.dart::OpticianApp"
+
+class "opticianapp::widget::login.dart::LoginView" {
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::main.dart::OpticianApp" -> "opticianapp::widget::login.dart::LoginView"
+
+class "opticianapp::widget::page_slider.dart::PageSlider" {
+  +bool isAppointmentView
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::login.dart::LoginView" -> "opticianapp::widget::page_slider.dart::PageSlider"
+
+class "opticianapp::widget::home::home.dart::HomeView" {
+  +List<Order> orders
+  +List<Appointment> appointments
+  +void Function(bool) updateView
+  +bool isAppointmentView
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::page_slider.dart::PageSlider" -> "opticianapp::widget::home::home.dart::HomeView"
+
+class "opticianapp::widget::home::appointment.dart::AppointmentView" {
+  +List<Appointment> appointments
+  +PageController controller
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::home::home.dart::HomeView" -> "opticianapp::widget::home::appointment.dart::AppointmentView"
+
+class "opticianapp::widget::home::order.dart::OrderView" {
+  +List<Order> orders
+  +PageController controller
+  +Widget build()
+  +void onAppointmentsPress()
+}
+
+"opticianapp::widget::home::home.dart::HomeView" -> "opticianapp::widget::home::order.dart::OrderView"
+
+class "opticianapp::widget::eyeglass_prescription::eyeglass_prescription.dart::EyeglassPrescriptionView" {
+  +List<EyeglassPrescription> eyeglassPrescriptions
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::page_slider.dart::PageSlider" --> "opticianapp::widget::eyeglass_prescription::eyeglass_prescription.dart::EyeglassPrescriptionView"
+
+class "opticianapp::widget::information::information.dart::InformationView" {
+  +Widget build()
+}
+
+"opticianapp::widget::page_slider.dart::PageSlider" --> "opticianapp::widget::information::information.dart::InformationView"
+
+class "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListView" {
+  +Map<String, List<Optician>> partners
+  +Map<String, List<Optician>> searchedPartners
+  +State<StatefulWidget> createState()
+}
+
+"opticianapp::widget::page_slider.dart::PageSlider" --> "opticianapp::widget::partnerlist::partnerlist.dart::PartnerListView"
+
+@enduml

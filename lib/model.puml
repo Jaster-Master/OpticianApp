@@ -1,0 +1,93 @@
+@startuml
+
+class "opticianapp::main.dart::OpticianApp" {
+  {static} +User? user
+  +Widget build()
+}
+
+class "opticianapp::model::appointment.dart::Appointment" {
+  +int id
+  +int customerId
+  +String type
+  +String text
+  +DateTime due
+  +DateTime timestamp
+  +Map<String, dynamic> toJson()
+}
+
+class "opticianapp::model::eyeglass_prescription.dart::EyeglassPrescription" {
+  +int id
+  +int customerId
+  +String forename
+  +String surname
+  +String type
+  +String text
+  +DateTime date
+  +double sphLeft
+  +double sphRight
+  +double cylLeft
+  +double cylRight
+  +double axisLeft
+  +double axisRight
+  +double addLeft
+  +double addRight
+  +double prism1Left
+  +double prism1Right
+  +double basis1Left
+  +double basis1Right
+  +double prism2Left
+  +double prism2Right
+  +double basis2Left
+  +double basis2Right
+  +double pdLeft
+  +double pdRight
+  +double hightLeft
+  +double hightRight
+  +double amplification
+  +DateTime timestamp
+  +Map<String, dynamic> toJson()
+}
+
+class "opticianapp::model::location.dart::Location" {
+  +int id
+  +String country
+  +String zipCode
+  +String city
+  +String street
+  +String streetNumber
+  +Map<String, dynamic> toJson()
+}
+
+class "opticianapp::model::optician.dart::Optician" {
+  +int id
+  +String name
+  +String description
+  +List<Location> locations
+  +String phoneNumber
+  +String email
+  +String website
+  +List<DateTime> availableAppointments
+  +Map<String, dynamic> toJson()
+}
+
+class "opticianapp::model::order.dart::Order" {
+  +int id
+  +int customerId
+  +String type
+  +String text
+  +DateTime due
+  +bool finished
+  +DateTime timestamp
+  +Map<String, dynamic> toJson()
+}
+
+class "opticianapp::model::user.dart::User" {
+  +int id
+  +String username
+  +String password
+  +int favouriteOpticianId
+  +Map<int, int> favouriteOpticianLocations
+  +Map<String, dynamic> toJson()
+}
+
+@enduml

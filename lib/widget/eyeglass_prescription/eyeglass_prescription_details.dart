@@ -34,10 +34,32 @@ class EyeglassPrescriptionDetailsView extends StatelessWidget {
                 title: Text("Persönlich",
                     style: TextStyle(fontSize: DefaultProperties.fontSize2)),
                 children: [
-                  Text(item.forename ?? "",
-                      style: TextStyle(fontSize: DefaultProperties.fontSize3)),
-                  Text(item.surname ?? "",
-                      style: TextStyle(fontSize: DefaultProperties.fontSize3))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding:
+                            EdgeInsets.all(DefaultProperties.defaultPadding),
+                        decoration: BoxDecoration(
+                            border: Border(
+                          bottom: BorderSide(width: 1.0, color: Colors.black),
+                        )),
+                        child: Text(item.forename ?? "",
+                            style: TextStyle(
+                                fontSize: DefaultProperties.fontSize3)),
+                      ),
+                      Container(
+                          padding:
+                              EdgeInsets.all(DefaultProperties.defaultPadding),
+                          decoration: BoxDecoration(
+                              border: Border(
+                            bottom: BorderSide(width: 1.0, color: Colors.black),
+                          )),
+                          child: Text(item.surname ?? "",
+                              style: TextStyle(
+                                  fontSize: DefaultProperties.fontSize3))),
+                    ],
+                  )
                 ],
               ),
               Visibility(
@@ -46,167 +68,197 @@ class EyeglassPrescriptionDetailsView extends StatelessWidget {
                   title: Text("Augen",
                       style: TextStyle(fontSize: DefaultProperties.fontSize2)),
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom:
-                                  BorderSide(width: 1.0, color: Colors.grey))),
-                      child: Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 1.0, color: Colors.grey))),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Left Eye",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        SizedBox(height: 10.0),
-                                        Text("leftEye"),
-                                        SizedBox(height: 10.0),
-                                        Text("leftEye"),
-                                        SizedBox(height: 10.0),
-                                        Text("leftEye"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: 1.0,
-                                  color: Colors.grey[300],
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text("Type",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        SizedBox(height: 10.0),
-                                        Text("type"),
-                                        SizedBox(height: 10.0),
-                                        Text("type"),
-                                        SizedBox(height: 10.0),
-                                        Text("type"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: 1.0,
-                                  color: Colors.grey[300],
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text("Right Eye",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        SizedBox(height: 10.0),
-                                        Text("rightEye"),
-                                        SizedBox(height: 10.0),
-                                        Text("rightEye"),
-                                        SizedBox(height: 10.0),
-                                        Text("rightEye"),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Linkes Auge"),
                             ),
-                          )
-                        ],
-                      ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.sphLeft.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.cylLeft.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.pdLeft.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.hightLeft.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Wert"),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Sphäre",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Zylinderwert",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Pupillendistanz",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Höhe",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Rechtes Auge"),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.sphRight.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.cylRight.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.pdRight.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.hightRight.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                          ],
+                        ),
+                      ],
                     )
-                    /*Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Wert",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text("Linkes Auge | Rechtes Auge",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text(""),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Sphäre",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text(
-                            "${item.sphLeft.toString()} | ${item.sphRight.toString()}",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text(""),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Zylinderwert",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text(
-                            "${item.cylLeft.toString()} | ${item.cylRight.toString()}",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text(""),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Pupillendistanz",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text(
-                            "${item.pdLeft.toString()} | ${item.pdRight.toString()}",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Höhe",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text(
-                            "${item.hightLeft.toString()} | ${item.hightRight.toString()}",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    )*/
                   ],
                 ),
               ),
@@ -217,106 +269,267 @@ class EyeglassPrescriptionDetailsView extends StatelessWidget {
                       style: TextStyle(fontSize: DefaultProperties.fontSize2)),
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text("Wert",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text("Linkes Glas | Rechtes Glas",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Achse",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text(
-                            "${item.axisLeft.toString()} | ${item.axisRight.toString()}",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("ADD-Wert",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                        Spacer(),
-                        Text(
-                            "${item.addLeft.toString()} | ${item.addRight.toString()}",
-                            style: TextStyle(
-                                fontSize: DefaultProperties.fontSize3)),
-                      ],
-                    ),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text("Prisma-1",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize3)),
-                      Spacer(),
-                      Text(
-                          "${item.prism1Left.toString()} | ${item.prism1Right.toString()}",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    ]),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text("Basis-1",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize3)),
-                      Spacer(),
-                      Text(
-                          "${item.basis1Left.toString()} | ${item.basis1Right.toString()}",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    ]),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text("Prisma-2",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize3)),
-                      Spacer(),
-                      Text(
-                          "${item.prism2Left.toString()} | ${item.prism2Right.toString()}",
-                          style:
-                              TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    ]),
-                    Text("",
-                        style:
-                            TextStyle(fontSize: DefaultProperties.fontSize3)),
-                    Container(
-                      margin: EdgeInsets.only(
-                          bottom: DefaultProperties.tripleMorePadding),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
                           children: [
-                            Text("Basis-2",
-                                style: TextStyle(
-                                    fontSize: DefaultProperties.fontSize3)),
-                            Spacer(),
-                            Text(
-                                "${item.basis2Left.toString()} | ${item.basis2Right.toString()}",
-                                style: TextStyle(
-                                    fontSize: DefaultProperties.fontSize3)),
-                          ]),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Linkes Glas"),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.axisLeft.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.addLeft.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.prism1Left.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.basis1Left.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.prism2Left.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.basis2Left.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Wert"),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Achse",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("ADD-Wert",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Prisma-1",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Basis-1",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Prisma-2",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Basis-2",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("Rechtes Glas"),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.axisRight.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.addRight.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.prism1Right.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.basis1Right.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.prism2Right.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  DefaultProperties.defaultPadding),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom:
+                                    BorderSide(width: 1.0, color: Colors.black),
+                              )),
+                              child: Text("${item.basis2Right.toString()}",
+                                  style: TextStyle(
+                                      fontSize: DefaultProperties.fontSize3)),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),

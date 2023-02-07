@@ -1,12 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:opticianapp/default_properties.dart';
+import 'package:opticianapp/main.dart';
+import 'package:opticianapp/model/location.dart';
+import 'package:opticianapp/model/optician.dart';
 import 'package:opticianapp/widget/partnerlist_details/partnerlist_locations.dart';
-
-import '../../../default_properties.dart';
-import '../../../main.dart';
-import '../../../model/location.dart';
-import '../../../model/optician.dart';
 
 class PartnerLocationListItem extends StatefulWidget {
   PartnerLocationsViewState currentState;
@@ -52,7 +50,7 @@ class PartnerLocationListItemState extends State<PartnerLocationListItem> {
             Spacer(),
             IconButton(
                 onPressed: () =>
-                {makeLocationFavourite(widget.partner, location)},
+                    {makeLocationFavourite(widget.partner, location)},
                 icon: Icon(isFavourite ? Icons.star : Icons.star_outline,
                     color: DefaultProperties.blueColor)),
             IconButton(

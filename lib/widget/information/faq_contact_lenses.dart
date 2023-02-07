@@ -3,14 +3,8 @@ import 'package:flutter/material.dart';
 import '../../default_properties.dart';
 
 class FaqContactLensesView extends StatelessWidget {
-  List<String> questions = [
-    "How to find Gobl?",
-    "What is the difference between an appointment and reminder?"
-  ];
-  List<String> answers = [
-    "It is impossible to find him!",
-    "An appointment is set by the optician and a reminder is set by you."
-  ];
+  List<String> questions = ["Question-Placeholder", "Answer-Placeholder"];
+  List<String> answers = ["Question-Placeholder", "Answer-Placeholder"];
 
   FaqContactLensesView({super.key});
 
@@ -20,7 +14,12 @@ class FaqContactLensesView extends StatelessWidget {
     for (int i = 0; i < questions.length; i++) {
       questionWidgets.add(ExpansionTile(
         title: Text(questions[i]),
-        children: [Text(answers[i])],
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+            child: Text(answers[i]),
+          )
+        ],
       ));
     }
     return Scaffold(
@@ -37,7 +36,8 @@ class FaqContactLensesView extends StatelessWidget {
                     style: TextStyle(fontSize: DefaultProperties.fontSize2)),
               ],
             ),
-            Text("FAQ Kontaktlinsen"),
+            Text("FAQ Kontaktlinsen",
+                style: TextStyle(fontSize: DefaultProperties.fontSize1)),
             Column(children: questionWidgets),
           ],
         ),

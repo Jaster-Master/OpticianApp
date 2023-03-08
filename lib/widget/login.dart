@@ -21,8 +21,8 @@ class LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   String? errorText = null;
   String? errorTextUserData = null;
-  String userName = "Gobl";
-  String password = "abcdefggfedcba";
+  String userName = "";
+  String password = "";
   bool isLoginButtonPressed = false;
   BuildContext? loadingDialogContext;
 
@@ -48,7 +48,6 @@ class LoginViewState extends State<LoginView> {
         onChanged: (value) {
           userName = value;
         },
-        initialValue: "Gobl",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Bitte geben Sie einen Benutzernamen ein!";
@@ -72,7 +71,6 @@ class LoginViewState extends State<LoginView> {
         onChanged: (value) {
           password = value;
         },
-        initialValue: "abcdefggfedcba",
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "Bitte geben Sie ein Passwort ein!";

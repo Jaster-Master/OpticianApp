@@ -21,6 +21,7 @@ class LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   String? errorText = null;
   String? errorTextUserData = null;
+  String ipAddress = "";
   String userName = "";
   String password = "";
   bool isLoginButtonPressed = false;
@@ -33,6 +34,20 @@ class LoginViewState extends State<LoginView> {
     var loginLogo = Padding(
       padding: EdgeInsets.all(DefaultProperties.morePadding),
       child: Image(image: AssetImage("assets/asabit-logo.png")),
+    );
+    var ipAddressField = Padding(
+      padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
+      child: TextFormField(
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(DefaultProperties.defaultRounded),
+            ),
+            labelText: 'IP'),
+        onChanged: (value) {
+          ipAddress = value;
+        },
+      ),
     );
     var usernameField = Padding(
       padding: const EdgeInsets.all(DefaultProperties.defaultPadding),
@@ -134,6 +149,7 @@ class LoginViewState extends State<LoginView> {
               child: Column(
                 children: [
                   loginLogo,
+                  ipAddressField,
                   usernameField,
                   passwordField,
                   errorTextWidget,
@@ -150,6 +166,7 @@ class LoginViewState extends State<LoginView> {
 
   void onLogin() {
     if (!_formKey.currentState!.validate() || isLoginButtonPressed) return;
+    DefaultProperties.serverIpAddress = "http://$ipAddress:5105/optician";
     showLoadingDialog();
     isLoginButtonPressed = true;
   }
